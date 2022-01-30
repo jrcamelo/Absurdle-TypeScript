@@ -1,8 +1,8 @@
 import { LetterState } from "./constants";
 
 export default class Status {
-    public absentLetters: string[] = [];
-    public presentLetters: string[] = [];
+    public absentLetters: Set<string> = new Set([]);
+    public presentLetters: Set<string> = new Set([]);
     public correctLetters: string[] = ["", "", "", "", ""];
     
     public constructor(previous?: Status) {
@@ -17,16 +17,21 @@ export default class Status {
         for (let i = 0; i < 5; i++) {
             const [ letter, state ] = evaluation[i];
             if (state === LetterState.CORRECT) {
+                if (this.presentLetters.has(letter)) {
+                    this.presentLetters.delete(letter);
+                }
                 this.correctLetters[i] = letter;
             } else if (state === LetterState.PRESENT) {
-                this.presentLetters.push(letter);
+                if (!this.correctLetters.includes(letter)) {
+                    this.presentLetters.add(letter);
+                }
             } else {
-                this.absentLetters.push(letter);
+                this.absentLetters.add(letter);
             }
         }
     }
 
-    static fromArray(previous: Array<string[]>): Status {
+    static fromArray(previous: [Set<string>, Set<string>, string[]]): Status {
         const [ absentLetters, presentLetters, correctLetters ] = previous;
         const status = new Status();
         status.absentLetters = absentLetters;
