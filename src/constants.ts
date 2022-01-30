@@ -16,3 +16,4 @@ export interface IHintLetter {
 }
 
 export const DEFAULT_LIVES = 6;
+export const ABSURDLE_LIVES = 10;
