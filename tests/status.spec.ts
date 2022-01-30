@@ -42,11 +42,11 @@ describe("Status", () => {
     it("should add a guess to the status", () => {
         const status = new Status();
         status.update([
-            ["a", LetterState.CORRECT],
-            ["b", LetterState.ABSENT],
-            ["c", LetterState.PRESENT],
-            ["d", LetterState.ABSENT],
-            ["e", LetterState.CORRECT]
+            { letter: "a", state: LetterState.CORRECT },
+            { letter: "b", state: LetterState.ABSENT },
+            { letter: "c", state: LetterState.PRESENT },
+            { letter: "d", state: LetterState.ABSENT },
+            { letter: "e", state: LetterState.CORRECT }
         ]);
         expect(status.absentLetters).toEqual(new Set(["b", "d"]));
         expect(status.presentLetters).toEqual(new Set(["c"]));
@@ -56,11 +56,11 @@ describe("Status", () => {
     it("should add a guess to a previous status", () => {
         const status = new Status(WORKING_STATUS);
         status.update([
-            ["z", LetterState.CORRECT],
-            ["a", LetterState.ABSENT],
-            ["s", LetterState.PRESENT],
-            ["d", LetterState.ABSENT],
-            ["p", LetterState.CORRECT]
+            { letter: "z", state: LetterState.CORRECT },
+            { letter: "a", state: LetterState.ABSENT },
+            { letter: "s", state: LetterState.PRESENT },
+            { letter: "d", state: LetterState.ABSENT },
+            { letter: "p", state: LetterState.CORRECT }
         ]);
         expect(status.absentLetters).toEqual(new Set(["a", "b", "c", "d", "e"]));
         expect(status.presentLetters).toEqual(new Set(["f", "g", "h", "i", "j", "s"]));
@@ -70,20 +70,20 @@ describe("Status", () => {
     it("should move a present letter to the correct letters", () => {
         const status = new Status();
         status.update([
-            ["a", LetterState.PRESENT],
-            ["b", LetterState.PRESENT],
-            ["c", LetterState.CORRECT],
-            ["d", LetterState.PRESENT],
-            ["e", LetterState.PRESENT]
+            { letter: "a", state: LetterState.PRESENT },
+            { letter: "b", state: LetterState.PRESENT },
+            { letter: "c", state: LetterState.CORRECT },
+            { letter: "d", state: LetterState.PRESENT },
+            { letter: "e", state: LetterState.PRESENT }
         ]);
         expect(status.presentLetters).toEqual(new Set(["a", "b", "d", "e"]));
         expect(status.correctLetters).toEqual(["", "", "c", "", ""]);
         status.update([
-            ["e", LetterState.CORRECT],
-            ["d", LetterState.CORRECT],
-            ["c", LetterState.CORRECT],
-            ["b", LetterState.CORRECT],
-            ["a", LetterState.CORRECT]
+            { letter: "e", state: LetterState.CORRECT },
+            { letter: "d", state: LetterState.CORRECT },
+            { letter: "c", state: LetterState.CORRECT },
+            { letter: "b", state: LetterState.CORRECT },
+            { letter: "a", state: LetterState.CORRECT }
         ]);
         expect(status.presentLetters).toEqual(new Set([]));
         expect(status.correctLetters).toEqual(["e", "d", "c", "b", "a"]);

@@ -1,4 +1,4 @@
-import { LetterState } from "./constants";
+import { LetterState, IHintLetter } from './constants';
 
 export default class Status {
     public absentLetters: Set<string> = new Set([]);
@@ -13,9 +13,9 @@ export default class Status {
         }
     }
 
-    public update(evaluation: [string, LetterState][]) {
+    public update(evaluation: IHintLetter[]) {
         for (let i = 0; i < 5; i++) {
-            const [ letter, state ] = evaluation[i];
+            const { letter, state } = evaluation[i];
             if (state === LetterState.CORRECT) {
                 if (this.presentLetters.has(letter)) {
                     this.presentLetters.delete(letter);

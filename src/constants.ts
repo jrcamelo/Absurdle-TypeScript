@@ -10,4 +10,9 @@ export const enum LetterState {
     CORRECT = "correct",
 };
 
+export interface IHintLetter {
+    letter: string;
+    state: LetterState;
+}
+
 export const DEFAULT_LIVES = 6;

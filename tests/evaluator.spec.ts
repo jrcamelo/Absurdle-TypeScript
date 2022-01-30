@@ -1,28 +1,28 @@
-import { LetterState } from "../src/constants";
+import { LetterState, IHintLetter } from '../src/constants';
 import Evaluator from "../src/evaluator";
 
-const TESTS_TESTS: [string, LetterState][] = [
-    ["t", LetterState.CORRECT],
-    ["e", LetterState.CORRECT],
-    ["s", LetterState.CORRECT],
-    ["t", LetterState.CORRECT],
-    ["s", LetterState.CORRECT]
+const TESTS_TESTS: IHintLetter[] = [
+    { letter: "t", state: LetterState.CORRECT },
+    { letter: "e", state: LetterState.CORRECT },
+    { letter: "s", state: LetterState.CORRECT },
+    { letter: "t", state: LetterState.CORRECT },
+    { letter: "s", state: LetterState.CORRECT },
 ];
 
-const ERROR_TESTS: [string, LetterState][] = [
-    ["e", LetterState.PRESENT],
-    ["r", LetterState.ABSENT],
-    ["r", LetterState.ABSENT],
-    ["o", LetterState.ABSENT],
-    ["r", LetterState.ABSENT]
+const ERROR_TESTS: IHintLetter[] = [
+    { letter: "e", state: LetterState.PRESENT },
+    { letter: "r", state: LetterState.ABSENT },
+    { letter: "r", state: LetterState.ABSENT },
+    { letter: "o", state: LetterState.ABSENT },
+    { letter: "r", state: LetterState.ABSENT },
 ];
 
-const WRONG_TESTS: [string, LetterState][] = [
-    ["w", LetterState.ABSENT],
-    ["r", LetterState.ABSENT],
-    ["o", LetterState.ABSENT],
-    ["n", LetterState.ABSENT],
-    ["g", LetterState.ABSENT]
+const WRONG_TESTS: IHintLetter[] = [
+    { letter: "w", state: LetterState.ABSENT },
+    { letter: "r", state: LetterState.ABSENT },
+    { letter: "o", state: LetterState.ABSENT },
+    { letter: "n", state: LetterState.ABSENT },
+    { letter: "g", state: LetterState.ABSENT },
 ];
 
 describe("Evaluator", () => {
