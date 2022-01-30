@@ -57,4 +57,9 @@ describe("Evaluator", () => {
     it("should know when a guess is not the same as the answer", () => {
         expect(Evaluator.isGuessCorrect("tests", "wrong")).toBe(false);
     });
+
+    it("should know when a guess is a valid word", () => {
+        expect(Evaluator.isGuessValidWord("tests")).toBe(true);
+        expect(Evaluator.isGuessValidWord("zzxzz")).toBe(false);
+    });
 });

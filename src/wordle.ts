@@ -2,6 +2,7 @@ import { GameState, DEFAULT_LIVES, LetterState } from './constants';
 import Dictionary from './dictionary';
 import Evaluator from './evaluator';
 import Status from './status';
+import Evaluator from '../dist/src/evaluator';
 
 export default class Wordle {
 
@@ -28,6 +29,9 @@ export default class Wordle {
         if (guess.length != 5) {
             throw new Error("Guess must be 5 characters long");
         }
+        if (!Evaluator.isGuessValidWord(guess)) {
+            throw new Error("Guess is not a valid word");
+        }
         if (Evaluator.isGuessCorrect(this.answer, guess)) {
             this.gameState = GameState.WON;
             return;
@@ -46,8 +50,8 @@ export default class Wordle {
         tally.set("gameState", this.gameState);
         tally.set("tries", this.tries);
         tally.set("guesses", this.guesses);
-        tally.set("absentLetters", this.status.absentLetters);
-        tally.set("presentLetters", this.status.presentLetters);
+        tally.set("absentLetters", Array.from(this.status.absentLetters));
+        tally.set("presentLetters", Array.from(this.status.presentLetters));
         tally.set("correctLetters", this.status.correctLetters);
         return tally;
     }

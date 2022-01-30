@@ -43,6 +43,10 @@ export default class Dictionary {
     return this._secrets[randomIndex];
   }
 
+  public isValidWord(word: string): boolean {
+    return this._valid_words_map.has(word);
+  }
+
 
   private readWordsFile(): string[] {
     return this.readFileAsArray(Path.join(__dirname, DATA_FOLDER, WORDS_FILE));

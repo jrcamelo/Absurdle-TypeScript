@@ -1,4 +1,5 @@
 import { LetterState } from "./constants";
+import Dictionary from './dictionary';
 
 export default class Evaluator {
     static evaluateGuess(answer: string, guess: string): [string, LetterState][] {
@@ -13,6 +14,10 @@ export default class Evaluator {
             }
         }
         return result;
+    }
+
+    static isGuessValidWord(guess: string): boolean {
+        return Dictionary.getInstance().isValidWord(guess);
     }
 
     static isGuessCorrect(answer: string, guess: string): boolean {

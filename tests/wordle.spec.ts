@@ -20,14 +20,14 @@ describe("Wordle", () => {
     expect(wordle.gameState).toBe("playing");
   });
 
-  it("should start with an empty list of absent letters", () => {
+  it("should start with an empty set of absent letters", () => {
     const wordle = new Wordle();
-    expect(wordle.status.absentLetters.length).toBe(0);
+    expect(wordle.status.absentLetters).toEqual(new Set());
   });
 
-  it("should start with an empty list of present letters", () => {
+  it("should start with an empty set of present letters", () => {
     const wordle = new Wordle();
-    expect(wordle.status.presentLetters.length).toBe(0);
+    expect(wordle.status.presentLetters).toEqual(new Set());
   });
   
   it("should start with 5 empty correct letters", () => {
