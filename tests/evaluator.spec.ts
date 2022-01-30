@@ -62,4 +62,9 @@ describe("Evaluator", () => {
         expect(Evaluator.isGuessValidWord("tests")).toBe(true);
         expect(Evaluator.isGuessValidWord("zzxzz")).toBe(false);
     });
+
+    it("should know when a guess has an absent letter", () => {
+        expect(Evaluator.hasAbsentLetter("tests", new Set(["a", "b", "c", "d"]))).toBe(false);
+        expect(Evaluator.hasAbsentLetter("tests", new Set(["a", "b", "c", "d", "e"]))).toBe(true);
+    });
 });

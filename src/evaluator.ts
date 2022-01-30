@@ -20,6 +20,15 @@ export default class Evaluator {
         return Dictionary.getInstance().isValidWord(guess);
     }
 
+    static hasAbsentLetter(guess: string, absentLetters: Set<string>) {
+        for (let i = 0; i < 5; i++) {
+            if (absentLetters.has(guess[i])) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     static isGuessCorrect(answer: string, guess: string): boolean {
         return guess === answer;
     }

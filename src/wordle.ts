@@ -2,11 +2,12 @@ import { GameState, DEFAULT_LIVES, LetterState } from './constants';
 import Dictionary from './dictionary';
 import Evaluator from './evaluator';
 import Status from './status';
-import Evaluator from '../dist/src/evaluator';
 
 export default class Wordle {
 
     public answer: string;
+    public hardMode: boolean;
+
     public tries: number = DEFAULT_LIVES;
     public gameState: GameState = GameState.PLAYING;
     public status: Status = new Status;
@@ -14,11 +15,10 @@ export default class Wordle {
 
     private dictionary: Dictionary;
 
-    constructor() {
+    constructor(hardMode: boolean = false) {
         this.dictionary = Dictionary.getInstance();
         this.answer = this.dictionary.getRandomSecret();
-        // TODO: Remove this log
-        console.log(this.answer);
+        this.hardMode = hardMode;
     }
 
     public tryGuess(guess: string): void {
@@ -28,6 +28,11 @@ export default class Wordle {
         guess = Evaluator.normalizeGuess(guess);
         if (guess.length != 5) {
             throw new Error("Guess must be 5 characters long");
+        }
+        if (this.hardMode) {
+            if (Evaluator.hasAbsentLetter(guess, this.status.absentLetters)) {
+                throw new Error("Guess contains absent letter in hard mode");
+            }
         }
         if (!Evaluator.isGuessValidWord(guess)) {
             throw new Error("Guess is not a valid word");

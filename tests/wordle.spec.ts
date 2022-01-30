@@ -95,4 +95,18 @@ describe("Wordle", () => {
     const again = Evaluator.evaluateGuess("tests", "again");
     expect(wordle.guesses).toEqual([fails, again]);
   });
+
+  it("should have a hard mode", () => {
+    const wordle = new Wordle();
+    expect(wordle.hardMode).toBe(false);
+    const hard = new Wordle(true);
+    expect(hard.hardMode).toBe(true);
+  });
+
+  it("should throw an error on hard mode when you try the same absent letter twice", () => {
+    const wordle = new Wordle(true);
+    wordle.answer = "tests";
+    wordle.tryGuess("first"); // R
+    expect(() => wordle.tryGuess("error")).toThrow();
+  });
 });
