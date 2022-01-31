@@ -49,8 +49,8 @@ export default class Terminal {
     
         let answer = ""
         readLine.question("", (it: string) => { 
-             answer = it
-             readLine.close()
+            answer = it
+            readLine.close()
         })
         while (answer == "") { await this.delay(100)  }
     
