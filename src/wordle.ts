@@ -50,6 +50,12 @@ export default class Wordle {
             if (Evaluator.hasAbsentLetter(guess, this.status.absentLetters)) {
                 throw new Error("Guess contains absent letter in hard mode");
             }
+            if (!Evaluator.hasPresentLetters(guess, this.status.presentLetters)) {
+                throw new Error("Guess must contain all present letters");
+            }
+            if (!Evaluator.hasCorrectLettersInPosition(guess, this.status.correctLetters)) {
+                throw new Error("Guess must contain correct letters in correct position");
+            }
         }
         if (!Evaluator.isGuessValidWord(guess)) {
             throw new Error("Guess is not a valid word");

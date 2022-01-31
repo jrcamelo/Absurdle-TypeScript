@@ -67,4 +67,27 @@ describe("Evaluator", () => {
         expect(Evaluator.hasAbsentLetter("tests", new Set(["a", "b", "c", "d"]))).toBe(false);
         expect(Evaluator.hasAbsentLetter("tests", new Set(["a", "b", "c", "d", "e"]))).toBe(true);
     });
+    
+    it("should know when a guess has a discovered present letter", () => {
+        expect(Evaluator.hasPresentLetters("tests", new Set([]))).toBe(true);
+        expect(Evaluator.hasPresentLetters("tests", new Set(["t"]))).toBe(true);
+    });
+
+    it("should know when a guess doesn't have a discovered present letter", () => {
+        expect(Evaluator.hasPresentLetters("tests", new Set(["a"]))).toBe(false);
+        expect(Evaluator.hasPresentLetters("tests", new Set(["t", "e", "s", "t", "a"]))).toBe(false);
+    });
+
+    it("should know when a guess has a correct letter in the correct position", () => {
+        expect(Evaluator.hasCorrectLettersInPosition("tests", ["", "", "", "", ""])).toBe(true);
+        expect(Evaluator.hasCorrectLettersInPosition("tests", ["t", "", "", "", ""])).toBe(true);
+        expect(Evaluator.hasCorrectLettersInPosition("tests", ["t", "e", "s", "t", ""])).toBe(true);
+        expect(Evaluator.hasCorrectLettersInPosition("tests", ["t", "e", "s", "t", "s"])).toBe(true);
+    });
+
+    it("should know when a guess doesn't have a correct letter in the correct position", () => {
+        expect(Evaluator.hasCorrectLettersInPosition("error", ["t", "", "", "", ""])).toBe(false);
+        expect(Evaluator.hasCorrectLettersInPosition("error", ["", "e", "", "", ""])).toBe(false);
+        expect(Evaluator.hasCorrectLettersInPosition("error", ["a", "r", "r", "o", "r"])).toBe(false);
+    });
 });

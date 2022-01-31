@@ -109,4 +109,19 @@ describe("Wordle", () => {
     wordle.tryGuess("first"); // R
     expect(() => wordle.tryGuess("error")).toThrow();
   });
+  
+  it("should throw an error on hard mode when you don't use a present letter", () => {
+    const wordle = new Wordle(true);
+    wordle.answer = "aphid";
+    wordle.tryGuess("fails");
+    expect(() => wordle.tryGuess("tests")).toThrow();
+  });
+
+  it("should throw an error on hard mode when you don't use a correct letter in the correct place", () => {
+    const wordle = new Wordle(true);
+    wordle.answer = "tests";
+    wordle.tryGuess("pests");
+    expect(() => wordle.tryGuess("error")).toThrow();
+    expect(() => wordle.tryGuess("pasts")).toThrow();
+  });
 });

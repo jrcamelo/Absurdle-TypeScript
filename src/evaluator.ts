@@ -9,7 +9,13 @@ export default class Evaluator {
             if (guess[i] === answer[i]) {
                 result.push({ letter: guess[i], state: LetterState.CORRECT });
             } else if (answer.includes(guess[i])) {
-                result.push({ letter: guess[i], state: LetterState.PRESENT });
+                let previousPresentCount = result.filter(l => l.state === LetterState.PRESENT).length;
+                let answerLetterCount = answer.split("").filter(l => l === guess[i]).length;
+                if (previousPresentCount < answerLetterCount) {
+                    result.push({ letter: guess[i], state: LetterState.PRESENT });
+                } else {
+                    result.push({ letter: guess[i], state: LetterState.ABSENT });
+                }
             } else {
                 result.push({ letter: guess[i], state: LetterState.ABSENT });
             }
@@ -28,6 +34,27 @@ export default class Evaluator {
             }
         }
         return false;
+    }
+
+    static hasPresentLetters(guess: string, present: Set<string>): boolean {
+        for (let p of present) {
+            if (!guess.includes(p)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    static hasCorrectLettersInPosition(guess: string, correct: string[]): boolean {
+        if (correct.every(letter => letter === "")) {
+            return true;
+        }
+        for (let i = 0; i < 5; i++) {
+            if (correct[i] && correct[i] !== guess[i]) {
+                return false;
+            }
+        }
+        return true;
     }
 
     static isGuessCorrect(answer: string, guess: string): boolean {

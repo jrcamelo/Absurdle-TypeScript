@@ -1,7 +1,15 @@
 import Absurdle from '../src/absurdle';
-import Dictionary from '../src/dictionary';
 import { GameState, ABSURDLE_LIVES } from '../src/constants';
-import Evaluator from '../src/evaluator';
+
+const VICTORY_GUESSES = [
+    "wrung",
+    "aphid",
+    "fable",
+    "tacky",
+    "slash",
+    "medal",
+    "ideal"
+]
 
 describe("Absurdle", () => {
     it("should not have a fixed answer", () => {
@@ -16,41 +24,41 @@ describe("Absurdle", () => {
 
     it("should have a win game state on a full run", () => {
         const absurdle = new Absurdle();
-        absurdle.tryGuess("wrung");
-        absurdle.tryGuess("aphid");
-        absurdle.tryGuess("fable");
-        absurdle.tryGuess("tacky");
-        absurdle.tryGuess("sassy");
-        absurdle.tryGuess("jazzy");
-        absurdle.tryGuess("savvy");
+        absurdle.tryGuess(VICTORY_GUESSES[0]);
+        absurdle.tryGuess(VICTORY_GUESSES[1]);
+        absurdle.tryGuess(VICTORY_GUESSES[2]);
+        absurdle.tryGuess(VICTORY_GUESSES[3]);
+        absurdle.tryGuess(VICTORY_GUESSES[4]);
+        absurdle.tryGuess(VICTORY_GUESSES[5]);
+        absurdle.tryGuess(VICTORY_GUESSES[6]);
         expect(absurdle.gameState).toBe(GameState.WON);
     });
 
     it("should decrease the amount of remaining words as player makes correct guesses, until only the answer remains", () => {
         const absurdle = new Absurdle();
         const total = absurdle.getRemainingWords();
-        absurdle.tryGuess("wrung");
+        absurdle.tryGuess(VICTORY_GUESSES[0]);
         const first = absurdle.getRemainingWords();
-        absurdle.tryGuess("aphid");
+        absurdle.tryGuess(VICTORY_GUESSES[1]);
         const second = absurdle.getRemainingWords();
-        absurdle.tryGuess("fable");
+        absurdle.tryGuess(VICTORY_GUESSES[2]);
         const third = absurdle.getRemainingWords();
-        absurdle.tryGuess("tacky");
+        absurdle.tryGuess(VICTORY_GUESSES[3]);
         const fourth = absurdle.getRemainingWords();
-        absurdle.tryGuess("sassy");
+        absurdle.tryGuess(VICTORY_GUESSES[4]);
         const fifth = absurdle.getRemainingWords();
-        absurdle.tryGuess("jazzy");
+        absurdle.tryGuess(VICTORY_GUESSES[5]);
         const sixth = absurdle.getRemainingWords();
-        absurdle.tryGuess("savvy");
+        absurdle.tryGuess(VICTORY_GUESSES[6]);
         const seventh = absurdle.getRemainingWords();
         expect(first).toBeLessThan(total);
         expect(second).toBeLessThan(first);
         expect(third).toBeLessThan(second);
         expect(fourth).toBeLessThan(third);
         expect(fifth).toBeLessThan(fourth);
-        expect(sixth).toBeLessThanOrEqual(fifth);
-        expect(seventh).toBeLessThan(sixth);
+        expect(sixth).toBeLessThan(fifth);
+        expect(seventh).toBeLessThanOrEqual(sixth);
         expect(seventh).toBe(1);
-        expect(absurdle.wordBucket[0]).toBe("savvy");
+        expect(absurdle.wordBucket[0]).toBe(VICTORY_GUESSES[6]);
     });
 });
