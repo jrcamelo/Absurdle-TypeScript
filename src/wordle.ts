@@ -22,6 +22,20 @@ export default class Wordle {
         this.tries = tries;
     }
 
+    public static fromTally(tally: Map<string, any>): Wordle {
+        const wordle = new Wordle(tally.get("hardMode") as boolean, tally.get("tries") as number);
+        wordle.gameState = tally.get("gameState") as GameState;
+        wordle.tries = tally.get("tries") as number;
+        wordle.guesses = tally.get("guesses") as IHintLetter[][];
+        wordle.status.absentLetters = new Set(tally.get("absentLetters") as string[]);
+        wordle.status.presentLetters = new Set(tally.get("presentLetters") as string[]);
+        wordle.status.correctLetters = tally.get("correctLetters") as string[];
+        if (wordle.gameState != GameState.PLAYING) {
+            wordle.answer = tally.get("answer") as string;
+        }
+        return wordle;
+    }
+
     public tryGuess(guess: string): void {
         this.checkGameState();
         this.checkValidGuess(guess);
@@ -71,10 +85,14 @@ export default class Wordle {
         this.status.update(result);
     }
 
+    public guessesToList(): string[] {
+        return this.guesses.map((guess: IHintLetter[]) => guess.map((letter: IHintLetter) => letter.letter).join(""));
+    }
+
     public checkForWinOrLoss(result: IHintLetter[]): void {
         if (result.every(hint => hint.state === LetterState.CORRECT)) {
             this.gameState = GameState.WON;
-        } else {        
+        } else {
             this.tries--;
             if (this.tries === 0) {
                 this.gameState = GameState.LOST;
@@ -86,11 +104,13 @@ export default class Wordle {
         const tally = new Map<string, any>();
         tally.set("gameState", this.gameState);
         tally.set("tries", this.tries);
+        tally.set("hardMode", this.hardMode);
         tally.set("guesses", this.guesses);
         tally.set("absentLetters", Array.from(this.status.absentLetters));
         tally.set("presentLetters", Array.from(this.status.presentLetters));
         tally.set("correctLetters", this.status.correctLetters);
         if (this.gameState != GameState.PLAYING) {
+            tally.set("correctLetters", this.answer.split(""));
             tally.set("answer", this.answer);
         }
         return tally;

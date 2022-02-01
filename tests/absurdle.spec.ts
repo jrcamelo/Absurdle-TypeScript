@@ -61,4 +61,15 @@ describe("Absurdle", () => {
         expect(seventh).toBe(1);
         expect(absurdle.wordBucket[0]).toBe(VICTORY_GUESSES[6]);
     });
+
+    it("should generate the same game from a tally", () => {
+        const absurdle = new Absurdle();
+        absurdle.tryGuess("tests");
+        absurdle.tryGuess("error");
+        absurdle.tryGuess("aphid");
+        const tally = absurdle.toTally();
+        const newAbsurdle = Absurdle.fromTally(tally);
+        expect(newAbsurdle.toTally()).toEqual(tally);
+        expect(newAbsurdle.wordBucket).toEqual(absurdle.wordBucket);
+    });
 });

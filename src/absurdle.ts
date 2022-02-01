@@ -16,6 +16,18 @@ export default class Absurdle extends Wordle {
         this.answer = "-----";
     }
 
+    public static fromTally(tally: Map<string, any>): Absurdle {
+        const wordle: Wordle = super.fromTally(tally);
+        const absurdle = new Absurdle(wordle.hardMode, wordle.tries);
+        absurdle.status = wordle.status;
+        absurdle.guesses = wordle.guesses;
+        absurdle.gameState = wordle.gameState;
+        for (let guess of absurdle.guessesToList()) {
+            absurdle.evaluateGuessAndUpdateWordBucket(guess);
+        }
+        return absurdle;
+    }
+
     public evaluateGuess(guess: string): IHintLetter[] {
         return this.evaluateGuessAndUpdateWordBucket(guess);
     }
