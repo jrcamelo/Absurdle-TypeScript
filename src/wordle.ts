@@ -41,10 +41,6 @@ export default class Wordle {
         this.checkValidGuess(guess);
 
         guess = Evaluator.normalizeGuess(guess);
-        if (Evaluator.isGuessCorrect(this.answer, guess)) {
-            this.gameState = GameState.WON;
-            return;
-        }
         const result = this.evaluateGuess(guess);
         this.updateStatusAndGuesses(result);
         this.checkForWinOrLoss(result);
@@ -109,12 +105,11 @@ export default class Wordle {
         tally.set("absentLetters", Array.from(this.status.absentLetters));
         tally.set("presentLetters", Array.from(this.status.presentLetters));
         tally.set("correctLetters", this.status.correctLetters);
+        tally.set("answer", "");
         if (this.gameState != GameState.PLAYING) {
             tally.set("correctLetters", this.answer.split(""));
             tally.set("answer", this.answer);
         }
         return tally;
     }
-
-
 }

@@ -25,7 +25,8 @@ const TALLY: Map<string, any> = new Map<string, any>([
   ],],
   ["absentLetters", [ 'f', 'a', 'i', 'l', 'r', 'o' ]],
   ["presentLetters", [ 'e' ]],
-  ["correctLetters", [ '', '', '', '', 's' ]]  
+  ["correctLetters", [ '', '', '', '', 's' ]],
+  ["answer", ""]
 ]);
 
 const TALLY_LOST: Map<string, any> = new Map<string, any>(TALLY);
@@ -34,17 +35,17 @@ TALLY_LOST.set("tries", 0);
 TALLY_LOST.set("correctLetters", [ 't', 'e', 's', 't', 's' ]);
 TALLY_LOST.set("answer", "tests");
 
-const TALLY_WON: Map<string, any> = new Map<string, any>(TALLY);
+const TALLY_WON: Map<string, any> = new Map<string, any>(TALLY_LOST);
 TALLY_WON.set("gameState", GameState.WON);
-TALLY_WON.set("correctLetters", [ 't', 'e', 's', 't', 's' ]);
-TALLY_WON.get("guesses").concat([
+TALLY_WON.set("tries", DEFAULT_LIVES - 2);
+TALLY_WON.set("presentLetters", []);
+TALLY_WON.set("guesses", [ ...TALLY_LOST.get("guesses"), [
     { letter: 't', state: 'correct' },
     { letter: 'e', state: 'correct' },
     { letter: 's', state: 'correct' },
     { letter: 't', state: 'correct' },
     { letter: 's', state: 'correct' }
-]);
-TALLY_WON.set("answer", "tests");
+]]);
 
 describe("Wordle", () => {
   it("should start with an answer from the dictionary", () => {
