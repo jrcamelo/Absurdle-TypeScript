@@ -1,5 +1,5 @@
-import { LetterState } from "../src/constants";
-import Status from "../src/status";
+import { LetterState } from "../src/app/constants";
+import Status from "../src/app/status";
 
 const DONE_STATUS = Status.fromArray([
     new Set(["a", "b", "c", "d", "e"]),

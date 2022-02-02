@@ -1,5 +1,5 @@
-import { LetterState, IHintLetter } from '../src/constants';
-import Evaluator from "../src/evaluator";
+import { LetterState, IHintLetter } from '../src/app/constants';
+import Evaluator from "../src/app/evaluator";
 
 const TESTS_TESTS: IHintLetter[] = [
     { letter: "t", state: LetterState.CORRECT },

@@ -1,4 +1,4 @@
-import Dictionary from "../src/dictionary";
+import Dictionary from "../src/app/dictionary";
 
 describe("Dictionary", () => {
   it ("should be a singleton", () => {
@@ -17,6 +17,7 @@ describe("Dictionary", () => {
     const dictionary = Dictionary.getInstance();
     const secrets = dictionary.getSecrets();
     expect(secrets.length).toBeGreaterThan(0);
+    console.log([dictionary.getRandomSecret()]);
   });
 
   it ("should get a random secret", () => {

@@ -1,7 +1,7 @@
-import Wordle from '../src/wordle';
-import Dictionary from '../src/dictionary';
-import { GameState, DEFAULT_LIVES } from '../src/constants';
-import Evaluator from '../src/evaluator';
+import Wordle from '../src/app/wordle';
+import Dictionary from '../src/app/dictionary';
+import { GameState, DEFAULT_LIVES } from '../src/app/constants';
+import Evaluator from '../src/app/evaluator';
 
 const TALLY: Map<string, any> = new Map<string, any>([
   ["gameState", GameState.PLAYING],

@@ -1,7 +1,7 @@
 import { PathOrFileDescriptor, readFileSync } from 'fs';
 import * as Path from 'path';
 
-const DATA_FOLDER = "../../res/"
+const DATA_FOLDER = "./data/"
 const WORDS_FILE = "words.txt";
 const SECRETS_FILE = "secrets.txt";
 
@@ -49,15 +49,15 @@ export default class Dictionary {
 
 
     private readWordsFile(): string[] {
-        return this.readFileAsArray(Path.join(__dirname, DATA_FOLDER, WORDS_FILE));
+        return this.readFileAsArray(Path.resolve(DATA_FOLDER, WORDS_FILE));
     }
 
     private readSecretsFile(): string[] {
-        return this.readFileAsArray(Path.join(__dirname, DATA_FOLDER, SECRETS_FILE));
+        return this.readFileAsArray(Path.resolve(DATA_FOLDER, SECRETS_FILE));
     }
 
     private readFileAsArray(path: PathOrFileDescriptor): string[] {
-        return readFileSync(path, 'utf8').split('\n');
+        return readFileSync(path, "utf8").split("\r\n");
     }
     
     private listToMap(list: string[]): Map<string, boolean> {
