@@ -1,10 +1,10 @@
-import { LetterState, IHintLetter } from './constants';
+import { LetterState, IHintLetter } from "./constants";
 
 export default class Status {
     public absentLetters: Set<string> = new Set([]);
     public presentLetters: Set<string> = new Set([]);
-    public correctLetters: string[] = ["", "", "", "", ""];
-    
+    public correctLetters: string[] = [``, ``, ``, ``, ``];
+
     public constructor(previous?: Status) {
         if (previous) {
             this.absentLetters = previous.absentLetters;
@@ -32,7 +32,7 @@ export default class Status {
     }
 
     static fromArray(previous: [Set<string>, Set<string>, string[]]): Status {
-        const [ absentLetters, presentLetters, correctLetters ] = previous;
+        const [absentLetters, presentLetters, correctLetters] = previous;
         const status = new Status();
         status.absentLetters = absentLetters;
         status.presentLetters = presentLetters;

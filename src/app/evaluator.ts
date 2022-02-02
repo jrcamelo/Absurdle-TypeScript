@@ -1,6 +1,6 @@
 import { LetterState } from "./constants";
-import Dictionary from './dictionary';
-import { IHintLetter } from './constants';
+import Dictionary from "./dictionary";
+import { IHintLetter } from "./constants";
 
 export default class Evaluator {
     static evaluateGuess(answer: string, guess: string): IHintLetter[] {
@@ -9,12 +9,18 @@ export default class Evaluator {
             if (guess[i] === answer[i]) {
                 result.push({ letter: guess[i], state: LetterState.CORRECT });
             } else if (answer.includes(guess[i])) {
-                let previousPresentCount = result.filter(l => l.state === LetterState.PRESENT).length;
-                let answerLetterCount = answer.split("").filter(l => l === guess[i]).length;
-                if (previousPresentCount < answerLetterCount) {
-                    result.push({ letter: guess[i], state: LetterState.PRESENT });
+                const presentCount = result.filter((l) => l.state === LetterState.PRESENT).length;
+                const answerCount = answer.split(``).filter((l) => l === guess[i]).length;
+                if (presentCount < answerCount) {
+                    result.push({
+                        letter: guess[i],
+                        state: LetterState.PRESENT,
+                    });
                 } else {
-                    result.push({ letter: guess[i], state: LetterState.ABSENT });
+                    result.push({
+                        letter: guess[i],
+                        state: LetterState.ABSENT,
+                    });
                 }
             } else {
                 result.push({ letter: guess[i], state: LetterState.ABSENT });
@@ -37,7 +43,7 @@ export default class Evaluator {
     }
 
     static hasPresentLetters(guess: string, present: Set<string>): boolean {
-        for (let p of present) {
+        for (const p of present) {
             if (!guess.includes(p)) {
                 return false;
             }
@@ -46,7 +52,7 @@ export default class Evaluator {
     }
 
     static hasCorrectLettersInPosition(guess: string, correct: string[]): boolean {
-        if (correct.every(letter => letter === "")) {
+        if (correct.every((letter) => letter === ``)) {
             return true;
         }
         for (let i = 0; i < 5; i++) {
@@ -63,6 +69,6 @@ export default class Evaluator {
 
     static normalizeGuess(guess: string): string {
         guess = guess.substring(0, 5).toLowerCase();
-        return guess.replace(/[^a-z]/g, "");
+        return guess.replace(/[^a-z]/g, ``);
     }
 }

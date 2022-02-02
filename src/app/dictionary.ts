@@ -1,13 +1,13 @@
-import { PathOrFileDescriptor, readFileSync } from 'fs';
-import * as Path from 'path';
+import { PathOrFileDescriptor, readFileSync } from "fs";
+import * as Path from "path";
 
-const DATA_FOLDER = "./data/"
-const WORDS_FILE = "words.txt";
-const SECRETS_FILE = "secrets.txt";
+const DATA_FOLDER = `./data/`;
+const WORDS_FILE = `words.txt`;
+const SECRETS_FILE = `secrets.txt`;
 
 export default class Dictionary {
     private static _instance: Dictionary;
-    
+
     private _valid_words: string[];
     private _valid_words_map: Map<string, boolean>;
     private _secrets: string[];
@@ -47,7 +47,6 @@ export default class Dictionary {
         return this._valid_words_map.has(word);
     }
 
-
     private readWordsFile(): string[] {
         return this.readFileAsArray(Path.resolve(DATA_FOLDER, WORDS_FILE));
     }
@@ -57,15 +56,14 @@ export default class Dictionary {
     }
 
     private readFileAsArray(path: PathOrFileDescriptor): string[] {
-        return readFileSync(path, "utf8").split("\r\n");
+        return readFileSync(path, `utf8`).split(`\r\n`);
     }
-    
+
     private listToMap(list: string[]): Map<string, boolean> {
         const map = new Map<string, boolean>();
-        list.forEach(word => {
+        list.forEach((word) => {
             map.set(word, false);
         });
         return map;
     }
 }
-

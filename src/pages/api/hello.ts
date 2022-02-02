@@ -1,14 +1,11 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import type { NextApiRequest, NextApiResponse } from 'next';
-import Dictionary from '@/app/dictionary';
+import type { NextApiRequest, NextApiResponse } from "next";
+import Dictionary from "@/app/dictionary";
 
 type Data = {
-  word: string;
+    word: string;
 };
 
-export default function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<Data>,
-) {
-  res.status(200).json({ word: Dictionary.getInstance().getRandomSecret() });
+export default function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
+    res.status(200).json({ word: Dictionary.getInstance().getRandomSecret() });
 }

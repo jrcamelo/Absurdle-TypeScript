@@ -1,6 +1,6 @@
 import Evaluator from "./evaluator";
 import Wordle from "./wordle";
-import { ABSURDLE_LIVES, GameState, IHintLetter } from './constants';
+import { ABSURDLE_LIVES, GameState, IHintLetter } from "./constants";
 
 interface IStatusGroup {
     status: IHintLetter[];
@@ -10,10 +10,10 @@ interface IStatusGroup {
 export default class Absurdle extends Wordle {
     public wordBucket: string[] = [];
 
-    constructor(hardMode: boolean = false, tries: number = ABSURDLE_LIVES) {
+    constructor(hardMode = false, tries: number = ABSURDLE_LIVES) {
         super(hardMode, tries);
         this.wordBucket = this.dictionary.getSecrets();
-        this.answer = "-----";
+        this.answer = `-----`;
     }
 
     public static fromTally(tally: Map<string, any>): Absurdle {
@@ -22,7 +22,7 @@ export default class Absurdle extends Wordle {
         absurdle.status = wordle.status;
         absurdle.guesses = wordle.guesses;
         absurdle.gameState = wordle.gameState;
-        for (let guess of absurdle.guessesToList()) {
+        for (const guess of absurdle.guessesToList()) {
             absurdle.evaluateGuessAndUpdateWordBucket(guess);
         }
         return absurdle;
@@ -33,18 +33,18 @@ export default class Absurdle extends Wordle {
     }
 
     public evaluateGuessAndUpdateWordBucket(guess: string): IHintLetter[] {
-        const [ statuses, buckets ] = this.checkEveryWord(guess);
+        const [statuses, buckets] = this.checkEveryWord(guess);
         const groupedStatuses = this.groupStatuses(statuses);
-        const mostCommonStatus = this.getMostCommonStatus(groupedStatuses); 
+        const mostCommonStatus = this.getMostCommonStatus(groupedStatuses);
         const largestBucket = buckets.get(JSON.stringify(mostCommonStatus));
         this.wordBucket = largestBucket || [];
         return mostCommonStatus;
     }
 
     private checkEveryWord(guess: string): [IHintLetter[][], Map<string, string[]>] {
-        let statuses: IHintLetter[][] = [];
-        let buckets: Map<string, string[]> = new Map();
-        for (let word of this.wordBucket.values()) {
+        const statuses: IHintLetter[][] = [];
+        const buckets: Map<string, string[]> = new Map();
+        for (const word of this.wordBucket.values()) {
             const result = Evaluator.evaluateGuess(word, guess);
             statuses.push(result);
 
@@ -57,11 +57,14 @@ export default class Absurdle extends Wordle {
     }
 
     private groupStatuses(statuses: IHintLetter[][]): Map<string, IStatusGroup> {
-        let groupedStatuses = new Map<string, IStatusGroup>();
-        for (let status of statuses) {
+        const groupedStatuses = new Map<string, IStatusGroup>();
+        for (const status of statuses) {
             const stateString = JSON.stringify(status);
             const count = groupedStatuses.get(stateString)?.amount || 0;
-            groupedStatuses.set(stateString, { status: status, amount: count + 1 });
+            groupedStatuses.set(stateString, {
+                status: status,
+                amount: count + 1,
+            });
         }
         return groupedStatuses;
     }
@@ -72,7 +75,7 @@ export default class Absurdle extends Wordle {
     }
 
     public getRemainingWords(): number {
-        return this.wordBucket.length
+        return this.wordBucket.length;
     }
 
     public getRandomRemainingWord(): string {
@@ -81,11 +84,10 @@ export default class Absurdle extends Wordle {
 
     public toTally(): Map<string, any> {
         const tally = super.toTally();
-        tally.set("remainingWords", this.wordBucket.length);
+        tally.set(`remainingWords`, this.wordBucket.length);
         if (this.gameState !== GameState.PLAYING) {
-            tally.set("answer", this.getRandomRemainingWord());
+            tally.set(`answer`, this.getRandomRemainingWord());
         }
         return tally;
     }
-
 }
