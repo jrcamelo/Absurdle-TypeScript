@@ -3,11 +3,12 @@ import Dictionary from '../src/app/dictionary';
 import { GameState, DEFAULT_LIVES } from '../src/app/constants';
 import Evaluator from '../src/app/evaluator';
 
-const TALLY: Map<string, any> = new Map<string, any>([
-  ["gameState", GameState.PLAYING],
-  ["tries", DEFAULT_LIVES - 2],
-  ["hardMode", false],
-  ["guesses", [
+function makeTally(): Map<string, any> {
+  const tally = new Map();
+  tally.set('gameState', GameState.PLAYING);
+  tally.set('tries', DEFAULT_LIVES - 2);
+  tally.set('hardMode', false);
+  tally.set('guesses', [
     [
       { letter: 'f', state: 'absent' },
       { letter: 'a', state: 'absent' },
@@ -22,30 +23,38 @@ const TALLY: Map<string, any> = new Map<string, any>([
       { letter: 'o', state: 'absent' },
       { letter: 'r', state: 'absent' }
     ]
-  ],],
-  ["absentLetters", [ 'f', 'a', 'i', 'l', 'r', 'o' ]],
-  ["presentLetters", [ 'e' ]],
-  ["correctLetters", [ '', '', '', '', 's' ]],
-  ["answer", ""]
-]);
+  ]);
+  tally.set('absentLetters', [ 'f', 'a', 'i', 'l', 'r', 'o' ]);
+  tally.set('presentLetters', [ 'e' ]);
+  tally.set('correctLetters', [ '', '', '', '', 's' ]);
+  tally.set('answer', '');
+  return tally;
+}
 
-const TALLY_LOST: Map<string, any> = new Map<string, any>(TALLY);
-TALLY_LOST.set("gameState", GameState.LOST);
-TALLY_LOST.set("tries", 0);
-TALLY_LOST.set("correctLetters", [ 't', 'e', 's', 't', 's' ]);
-TALLY_LOST.set("answer", "tests");
+function makeTallyLost(): Map<string, any> {
+  const tally = makeTally();
+  tally.set("gameState", GameState.LOST);
+  tally.set("tries", 0);
+  tally.set("correctLetters", [ 't', 'e', 's', 't', 's' ]);
+  tally.set("answer", "tests");
+  return tally;
+}
 
-const TALLY_WON: Map<string, any> = new Map<string, any>(TALLY_LOST);
-TALLY_WON.set("gameState", GameState.WON);
-TALLY_WON.set("tries", DEFAULT_LIVES - 2);
-TALLY_WON.set("presentLetters", []);
-TALLY_WON.set("guesses", [ ...TALLY_LOST.get("guesses"), [
+function makeTallyWon(): Map<string, any> {
+  const tally = makeTallyLost();
+  tally.set("gameState", GameState.WON);
+  tally.set("tries", DEFAULT_LIVES - 2);
+  tally.set("presentLetters", []);
+  tally.set("correctLetters", [ 't', 'e', 's', 't', 's' ]);
+  tally.set("guesses", [ ...makeTallyLost().get("guesses"), [
     { letter: 't', state: 'correct' },
     { letter: 'e', state: 'correct' },
     { letter: 's', state: 'correct' },
     { letter: 't', state: 'correct' },
     { letter: 's', state: 'correct' }
-]]);
+  ]]);
+  return tally;
+}
 
 describe("Wordle", () => {
   it("should start with an answer from the dictionary", () => {
@@ -174,7 +183,7 @@ describe("Wordle", () => {
     wordle.answer = "tests";
     wordle.tryGuess("fails");
     wordle.tryGuess("error");
-    expect(wordle.toTally()).toEqual(TALLY);
+    expect(wordle.toTally()).toEqual(makeTally());
   });
 
   it("should generate a different tally for victory", () => {
@@ -183,7 +192,7 @@ describe("Wordle", () => {
     wordle.tryGuess("fails");
     wordle.tryGuess("error");
     wordle.tryGuess("tests");
-    expect(wordle.toTally()).toEqual(TALLY_WON);
+    expect(wordle.toTally()).toEqual(makeTallyWon());
   });
 
   it("should generate a different tally for defeat", () => {
@@ -192,14 +201,14 @@ describe("Wordle", () => {
     wordle.tryGuess("fails");
     wordle.tries = 1;
     wordle.tryGuess("error");
-    expect(wordle.toTally()).toEqual(TALLY_LOST);
+    expect(wordle.toTally()).toEqual(makeTallyLost());
   });
 
   it("should generate a game from a tally", () => {
-    const wordle = Wordle.fromTally(TALLY);
-    expect(wordle.toTally()).toEqual(TALLY);
+    const wordle = Wordle.fromTally(makeTally());
+    expect(wordle.toTally()).toEqual(makeTally());
     wordle.answer = "tests";
     wordle.tryGuess("tests");
-    expect(wordle.toTally()).toEqual(TALLY_WON);
+    expect(wordle.toTally()).toEqual(makeTallyWon());
   });
 });
