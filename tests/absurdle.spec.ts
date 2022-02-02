@@ -1,4 +1,4 @@
-import Absurdle from '../src/app/absurdle';
+import Absurdle from '../src/app/game/absurdle';
 import { GameState, ABSURDLE_LIVES } from '../src/app/constants';
 
 const VICTORY_GUESSES = [

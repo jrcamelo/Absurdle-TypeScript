@@ -1,9 +1,10 @@
-import { GameState, DEFAULT_LIVES, LetterState, IHintLetter } from "./constants";
-import Dictionary from "./dictionary";
-import Evaluator from "./evaluator";
-import Status from "./status";
+import { GameState, DEFAULT_LIVES, LetterState, IHintLetter } from "../constants";
+import Dictionary from "../dictionary";
+import Evaluator from "../evaluator";
+import Game from "./game";
+import Status from "../status";
 
-export default class Wordle {
+export default class Wordle implements Game {
     public answer: string;
     public hardMode: boolean;
 

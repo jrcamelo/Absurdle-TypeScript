@@ -1,4 +1,4 @@
-import Wordle from '../src/app/wordle';
+import Wordle from '../src/app/game/wordle';
 import Dictionary from '../src/app/dictionary';
 import { GameState, DEFAULT_LIVES } from '../src/app/constants';
 import Evaluator from '../src/app/evaluator';

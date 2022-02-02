@@ -1,6 +1,6 @@
-import Evaluator from "./evaluator";
+import Evaluator from "../evaluator";
 import Wordle from "./wordle";
-import { ABSURDLE_LIVES, GameState, IHintLetter } from "./constants";
+import { ABSURDLE_LIVES, GameState, IHintLetter } from "../constants";
 
 interface IStatusGroup {
     status: IHintLetter[];
