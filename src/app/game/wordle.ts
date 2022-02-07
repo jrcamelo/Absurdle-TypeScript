@@ -1,8 +1,9 @@
-import { GameState, DEFAULT_LIVES, LetterState, IHintLetter } from "../constants";
+import { GameState, DEFAULT_LIVES, LetterState, IHintLetter, GameMode } from "../constants";
 import Dictionary from "../dictionary";
 import Evaluator from "../evaluator";
 import Game from "./game";
 import Status from "../status";
+import TallyReport from "./tallyReport";
 
 export default class Wordle implements Game {
     public answer: string;
@@ -22,18 +23,20 @@ export default class Wordle implements Game {
         this.tries = tries;
     }
 
-    public static fromTally(tally: Map<string, any>): Wordle {
-        const wordle = new Wordle(tally.get(`hardMode`) as boolean, tally.get(`tries`) as number);
-        wordle.gameState = tally.get(`gameState`) as GameState;
-        wordle.tries = tally.get(`tries`) as number;
-        wordle.guesses = tally.get(`guesses`) as IHintLetter[][];
-        wordle.status.absentLetters = new Set(tally.get(`absentLetters`) as string[]);
-        wordle.status.presentLetters = new Set(tally.get(`presentLetters`) as string[]);
-        wordle.status.correctLetters = tally.get(`correctLetters`) as string[];
-        if (wordle.gameState != GameState.PLAYING) {
-            wordle.answer = tally.get(`answer`) as string;
-        }
-        return wordle;
+    public static fromTally(tally: TallyReport): Wordle {
+        const game = new Wordle(tally.hardMode, tally.tries);
+        game.gameState = <GameState>tally.gameState;
+        game.guesses = tally.guesses.map((guess: string[][]): IHintLetter[] =>
+            guess.map((letter: string[]) => ({
+                letter: letter[0],
+                state: <LetterState>letter[1],
+            })),
+        );
+        game.status.absentLetters = new Set(tally.absentLetters);
+        game.status.presentLetters = new Set(tally.presentLetters);
+        game.status.correctLetters = tally.correctLetters;
+        game.answer = tally.answer;
+        return game;
     }
 
     public tryGuess(guess: string): void {
@@ -81,8 +84,18 @@ export default class Wordle implements Game {
         this.status.update(result);
     }
 
+    public getMode(): string {
+        return this.hardMode ? GameMode.WORDLE_HARD : GameMode.WORDLE;
+    }
+
     public guessesToList(): string[] {
         return this.guesses.map((guess: IHintLetter[]) => guess.map((letter: IHintLetter) => letter.letter).join(``));
+    }
+
+    public guessesToListOfGuesses(): string[][][] {
+        return this.guesses.map((guess: IHintLetter[]) =>
+            guess.map((letter: IHintLetter) => [letter.letter, letter.state]),
+        );
     }
 
     public checkForWinOrLoss(result: IHintLetter[]): void {
@@ -96,20 +109,11 @@ export default class Wordle implements Game {
         }
     }
 
-    public toTally(): Map<string, any> {
-        const tally = new Map<string, any>();
-        tally.set(`gameState`, this.gameState);
-        tally.set(`tries`, this.tries);
-        tally.set(`hardMode`, this.hardMode);
-        tally.set(`guesses`, this.guesses);
-        tally.set(`absentLetters`, Array.from(this.status.absentLetters));
-        tally.set(`presentLetters`, Array.from(this.status.presentLetters));
-        tally.set(`correctLetters`, this.status.correctLetters);
-        tally.set(`answer`, ``);
-        if (this.gameState != GameState.PLAYING) {
-            tally.set(`correctLetters`, this.answer.split(``));
-            tally.set(`answer`, this.answer);
-        }
-        return tally;
+    public toTally() {
+        return TallyReport.fromWordle(this);
+    }
+
+    public toDatabaseTally(userToken: string) {
+        return TallyReport.fromWordle(this).toDatabaseJson(userToken);
     }
 }

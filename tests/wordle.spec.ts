@@ -1,58 +1,59 @@
 import Wordle from '../src/app/game/wordle';
 import Dictionary from '../src/app/dictionary';
-import { GameState, DEFAULT_LIVES } from '../src/app/constants';
+import { GameState, DEFAULT_LIVES, GameMode } from '../src/app/constants';
 import Evaluator from '../src/app/evaluator';
+import TallyReport from '../src/app/game/tallyReport';
 
-function makeTally(): Map<string, any> {
-  const tally = new Map();
-  tally.set('gameState', GameState.PLAYING);
-  tally.set('tries', DEFAULT_LIVES - 2);
-  tally.set('hardMode', false);
-  tally.set('guesses', [
-    [
-      { letter: 'f', state: 'absent' },
-      { letter: 'a', state: 'absent' },
-      { letter: 'i', state: 'absent' },
-      { letter: 'l', state: 'absent' },
-      { letter: 's', state: 'correct' },
-    ],
-    [
-      { letter: 'e', state: 'present' },
-      { letter: 'r', state: 'absent' },
-      { letter: 'r', state: 'absent' },
-      { letter: 'o', state: 'absent' },
-      { letter: 'r', state: 'absent' }
+function makeTally() {
+  return new TallyReport(
+    GameMode.WORDLE,
+    GameState.PLAYING,
+    DEFAULT_LIVES - 2,
+    false,
+    [ 
+      [ 
+        ['f', 'absent'],
+        ['a', 'absent'],
+        ['i', 'absent'],
+        ['l', 'absent'],
+        ['s', 'correct']
+      ],
+      [
+        ['e', 'present'],
+        ['r', 'absent'],
+        ['r', 'absent'],
+        ['o', 'absent'],
+        ['r', 'absent']
     ]
-  ]);
-  tally.set('absentLetters', [ 'f', 'a', 'i', 'l', 'r', 'o' ]);
-  tally.set('presentLetters', [ 'e' ]);
-  tally.set('correctLetters', [ '', '', '', '', 's' ]);
-  tally.set('answer', '');
-  return tally;
+  ],
+  [ 'f', 'a', 'i', 'l', 'r', 'o' ],
+  [ 'e' ],
+  [ '', '', '', '', 's' ],
+  'tests'
+  )
 }
 
-function makeTallyLost(): Map<string, any> {
+function makeTallyLost() {
   const tally = makeTally();
-  tally.set("gameState", GameState.LOST);
-  tally.set("tries", 0);
-  tally.set("correctLetters", [ 't', 'e', 's', 't', 's' ]);
-  tally.set("answer", "tests");
+  tally['gameState'] = GameState.LOST;
+  tally['tries'] = 0;
+  tally['answer'] = "tests";
   return tally;
 }
 
-function makeTallyWon(): Map<string, any> {
+function makeTallyWon() {
   const tally = makeTallyLost();
-  tally.set("gameState", GameState.WON);
-  tally.set("tries", DEFAULT_LIVES - 2);
-  tally.set("presentLetters", []);
-  tally.set("correctLetters", [ 't', 'e', 's', 't', 's' ]);
-  tally.set("guesses", [ ...makeTallyLost().get("guesses"), [
-    { letter: 't', state: 'correct' },
-    { letter: 'e', state: 'correct' },
-    { letter: 's', state: 'correct' },
-    { letter: 't', state: 'correct' },
-    { letter: 's', state: 'correct' }
-  ]]);
+  tally['gameState'] = GameState.WON;
+  tally['tries'] = DEFAULT_LIVES - 2;
+  tally['presentLetters'] = [];
+  tally['correctLetters'] = [ 't', 'e', 's', 't', 's' ];
+  tally['guesses'] = [ ...makeTallyLost()['guesses'], [
+    [ 't', 'correct' ],
+    [ 'e', 'correct' ],
+    [ 's', 'correct' ],
+    [ 't', 'correct' ],
+    [ 's', 'correct' ]
+  ]];
   return tally;
 }
 
@@ -205,10 +206,13 @@ describe("Wordle", () => {
   });
 
   it("should generate a game from a tally", () => {
-    const wordle = Wordle.fromTally(makeTally());
+    console.log(TallyReport.fromJson(makeTally()).guesses)
+    const wordle = Wordle.fromTally(TallyReport.fromJson(makeTally()));
     expect(wordle.toTally()).toEqual(makeTally());
     wordle.answer = "tests";
     wordle.tryGuess("tests");
+    console.log(wordle.toTally().guesses[0])
+    console.log(makeTallyWon().guesses[0])
     expect(wordle.toTally()).toEqual(makeTallyWon());
   });
 });

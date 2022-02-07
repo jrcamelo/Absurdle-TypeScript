@@ -1,6 +1,7 @@
 import Evaluator from "../evaluator";
 import Wordle from "./wordle";
-import { ABSURDLE_LIVES, GameState, IHintLetter } from "../constants";
+import { ABSURDLE_LIVES, GameMode, GameState, IHintLetter, LetterState } from "../constants";
+import TallyReport from "./tallyReport";
 
 interface IStatusGroup {
     status: IHintLetter[];
@@ -16,20 +17,30 @@ export default class Absurdle extends Wordle {
         this.answer = `-----`;
     }
 
-    public static fromTally(tally: Map<string, any>): Absurdle {
-        const wordle: Wordle = super.fromTally(tally);
-        const absurdle = new Absurdle(wordle.hardMode, wordle.tries);
-        absurdle.status = wordle.status;
-        absurdle.guesses = wordle.guesses;
-        absurdle.gameState = wordle.gameState;
-        for (const guess of absurdle.guessesToList()) {
-            absurdle.evaluateGuessAndUpdateWordBucket(guess);
-        }
-        return absurdle;
+    public static fromTally(tally: TallyReport): Absurdle {
+        const game = new Absurdle(tally.hardMode, tally.tries);
+        game.gameState = <GameState>tally.gameState;
+        game.guesses = tally.guesses.map((guess: string[][]): IHintLetter[] =>
+            guess.map((letter: string[]) => ({
+                letter: letter[0],
+                state: <LetterState>letter[1],
+            })),
+        );
+        game.status.absentLetters = new Set(tally.absentLetters);
+        game.status.presentLetters = new Set(tally.presentLetters);
+        game.status.correctLetters = tally.correctLetters;
+        game.updateWordBucket();
+        return game;
     }
 
     public evaluateGuess(guess: string): IHintLetter[] {
         return this.evaluateGuessAndUpdateWordBucket(guess);
+    }
+
+    public updateWordBucket() {
+        for (const guess of this.guessesToList()) {
+            this.evaluateGuessAndUpdateWordBucket(guess);
+        }
     }
 
     public evaluateGuessAndUpdateWordBucket(guess: string): IHintLetter[] {
@@ -82,12 +93,15 @@ export default class Absurdle extends Wordle {
         return this.wordBucket[Math.floor(Math.random() * this.wordBucket.length)];
     }
 
-    public toTally(): Map<string, any> {
-        const tally = super.toTally();
-        tally.set(`remainingWords`, this.wordBucket.length);
-        if (this.gameState !== GameState.PLAYING) {
-            tally.set(`answer`, this.getRandomRemainingWord());
-        }
-        return tally;
+    public getMode(): string {
+        return this.hardMode ? GameMode.ABSURDLE_HARD : GameMode.ABSURDLE;
+    }
+
+    public toTally() {
+        return TallyReport.fromAbsurdle(this);
+    }
+
+    public toDatabaseTally(userToken: string) {
+        return TallyReport.fromAbsurdle(this).toDatabaseJson(userToken);
     }
 }

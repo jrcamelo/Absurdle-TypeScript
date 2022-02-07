@@ -5,11 +5,15 @@ export default class Status {
     public presentLetters: Set<string> = new Set([]);
     public correctLetters: string[] = [``, ``, ``, ``, ``];
 
-    public constructor(previous?: Status) {
+    public constructor(previous?: Status, previousJson?: any) {
         if (previous) {
             this.absentLetters = previous.absentLetters;
             this.presentLetters = previous.presentLetters;
             this.correctLetters = previous.correctLetters;
+        } else if (previousJson) {
+            this.absentLetters = new Set(previousJson[`absentLetters`]);
+            this.presentLetters = new Set(previousJson[`presentLetters`]);
+            this.correctLetters = previousJson[`correctLetters`];
         }
     }
 

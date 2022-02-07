@@ -21,9 +21,12 @@ export default interface Game {
     evaluateGuess(guess: string): IHintLetter[];
     updateStatusAndGuesses(result: IHintLetter[]): void;
 
+    getMode(): string;
     guessesToList(): string[];
+    guessesToListOfGuesses(): string[][][];
 
     checkForWinOrLoss(result: IHintLetter[]): void;
 
-    toTally(): Map<string, any>;
+    toTally(): any;
+    toDatabaseTally(userToken: string): any;
 }
