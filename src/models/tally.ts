@@ -44,7 +44,7 @@ const TallySchema = new mongoose.Schema({
     },
     remainingWords: {
         type: Number,
-        required: false
+        required: false,
     },
     createdAt: {
         type: Date,
@@ -53,4 +53,4 @@ const TallySchema = new mongoose.Schema({
     },
 });
 
-export default mongoose.models.Tally || mongoose.model("Tally", TallySchema);
+export default mongoose.models.Tally || mongoose.model(`Tally`, TallySchema);
