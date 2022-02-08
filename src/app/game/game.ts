@@ -29,4 +29,5 @@ export default interface Game {
 
     toTally(): any;
     toDatabaseTally(userToken: string): any;
+    toUserJson(): any;
 }

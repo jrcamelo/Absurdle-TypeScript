@@ -116,4 +116,8 @@ export default class Wordle implements Game {
     public toDatabaseTally(userToken: string) {
         return TallyReport.fromWordle(this).toDatabaseJson(userToken);
     }
+
+    public toUserJson() {
+        return TallyReport.fromWordle(this).toUserJson();
+    }
 }

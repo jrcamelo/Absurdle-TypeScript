@@ -104,4 +104,8 @@ export default class Absurdle extends Wordle {
     public toDatabaseTally(userToken: string) {
         return TallyReport.fromAbsurdle(this).toDatabaseJson(userToken);
     }
+
+    public toUserJson() {
+        return TallyReport.fromAbsurdle(this).toUserJson();
+    }
 }

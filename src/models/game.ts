@@ -1,10 +1,6 @@
 import mongoose from "mongoose";
 
-const TallySchema = new mongoose.Schema({
-    userToken: {
-        type: String,
-        required: true,
-    },
+const GameSchema = new mongoose.Schema({
     mode: {
         type: String,
         required: true,
@@ -53,4 +49,5 @@ const TallySchema = new mongoose.Schema({
     },
 });
 
-export default mongoose.models.Tally || mongoose.model(`Tally`, TallySchema);
+mongoose.models?.Game || mongoose.model(`Game`, GameSchema);
+export default GameSchema;

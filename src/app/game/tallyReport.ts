@@ -67,7 +67,7 @@ export default class TallyReport {
             game.getRemainingWords(),
         );
     }
-    
+
     static fromJson(json: any): TallyReport {
         return new TallyReport(
             json.mode,
@@ -135,4 +135,20 @@ export default class TallyReport {
         return { ...this.toJson(), userToken };
     }
 
+    toUserJson() {
+        const answer = this.gameState == GameState.PLAYING ? `` : this.answer;
+
+        return {
+            mode: this.mode,
+            gameState: this.gameState,
+            tries: this.tries,
+            hardMode: this.hardMode,
+            guesses: this.guesses,
+            absentLetters: this.absentLetters,
+            presentLetters: this.presentLetters,
+            correctLetters: this.correctLetters,
+            answer: this.answer,
+            remainingWords: this.remainingWords,
+        };
+    }
 }

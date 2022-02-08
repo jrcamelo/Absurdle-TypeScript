@@ -3,31 +3,22 @@ import Game from "@/app/game/game";
 import Database from "@/lib/database";
 import type NextApiGameRequest from "@/utils/nextApiGameRequest";
 import { NextApiResponse } from "next";
-import Tally from "@/models/tally";
+import { getPlayer, saveNewPlayerAndGetToken, addNewGame, quitOngoingGame } from "@/services/player";
 import Absurdle from "@/app/game/absurdle";
 
-export default async function handler(req: NextApiGameRequest, res: NextApiResponse<Game>) {
+export default async function handler(req: NextApiGameRequest, res: NextApiResponse) {
     await Database.ensureConnection();
 
     let userToken = req.cookies?.token;
-    if (!userToken) {
-        userToken = generateToken();
-        console.log(userToken);
-        res.setHeader(`Set-Cookie`, `token=${userToken}; path=/;`);
+    let player = await getPlayer(userToken);
+    if (!userToken || !player) {
+        userToken = await saveNewPlayerAndGetToken();
+        res.setHeader("Set-Cookie", `token=${userToken}; HttpOnly; Path=/;`);
+        player = await getPlayer(userToken);
     }
-    // await Database.ensureConnection();
+
     const wordle = new Absurdle(false);
     console.log(wordle.toDatabaseTally(userToken));
-    const game = await Tally.findOneAndReplace(
-        { userToken },
-        { ...wordle.toDatabaseTally(userToken) },
-        { upsert: true },
-    );
-    game.save();
-    res.status(200).json(game);
-}
-
-// Generates a 64 letters/numbers/symbols random string
-function generateToken(): string {
-    return Math.random().toString(36).substr(2, 64);
+    await addNewGame(userToken, wordle.toDatabaseTally(userToken));
+    res.status(200).json(wordle.toUserJson());
 }

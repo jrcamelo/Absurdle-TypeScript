@@ -1,20 +1,10 @@
-import NextApiGameRequest from "@/utils/nextApiGameRequest";
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextApiRequest } from "next";
 import { NextResponse } from "next/server";
-import Database from "@/lib/database";
-// import Tally from "@/models/tally";
+import GameException from '../../../app/game/gameException';
 
 export const middleware = async (req: NextApiRequest) => {
-    // Get token from cookies
-    const token = req.cookies?.token;
-    if (!token) {
-        return NextResponse.json(NO_COOKIE_RESPONSE);
+    if (!req.cookies?.token) {
+        const error = new GameException(`You lack a cookie token, please start a new game`).toJson();
+        return NextResponse.json(error);
     }
-};
-
-const NO_COOKIE_RESPONSE = {
-    statusCode: 401,
-    body: JSON.stringify({
-        error: `You lack a cookie token, please start a new game`,
-    }),
 };
