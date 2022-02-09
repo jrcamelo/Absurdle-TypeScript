@@ -36,8 +36,9 @@ export default class Absurdle extends Wordle {
     public evaluateGuess(guess: string): IHintLetter[] {
         return this.evaluateGuessAndUpdateWordBucket(guess);
     }
-
-    public updateWordBucket() {
+    
+    public loadGuesses(guesses: string[][][]): void {
+        super.loadGuesses(guesses);
         for (const guess of this.guessesToList()) {
             this.evaluateGuessAndUpdateWordBucket(guess);
         }

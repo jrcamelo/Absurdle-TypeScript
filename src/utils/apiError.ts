@@ -1,7 +1,4 @@
-// Exception for game
-// Should take a message
-
-export default class GameException extends Error {
+export default class ApiError extends Error {
     statusCode: number;
 
     constructor(message: string, code = 401) {
@@ -11,9 +8,9 @@ export default class GameException extends Error {
 
     toJson(): object {
         return {
-            statusCode: 401,
+            statusCode: this.statusCode,
             body: JSON.stringify({
-                error: `You lack a cookie token, please start a new game`,
+                error: this.message,
             }),
         };
     }

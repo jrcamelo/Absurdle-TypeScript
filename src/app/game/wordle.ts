@@ -4,6 +4,7 @@ import Evaluator from "../evaluator";
 import Game from "./game";
 import Status from "../status";
 import TallyReport from "./tallyReport";
+import GameError from "../../utils/gameError";
 
 export default class Wordle implements Game {
     public answer: string;
@@ -44,6 +45,10 @@ export default class Wordle implements Game {
         this.checkValidGuess(guess);
 
         guess = Evaluator.normalizeGuess(guess);
+        if (this.guessesToList().includes(guess)) {
+            throw new GameError(`You already guessed ${guess}`);
+        }
+
         const result = this.evaluateGuess(guess);
         this.updateStatusAndGuesses(result);
         this.checkForWinOrLoss(result);
@@ -51,28 +56,26 @@ export default class Wordle implements Game {
 
     public checkGameState(): void {
         if (this.gameState !== GameState.PLAYING) {
-            throw new Error(`Game is not in playing state`);
+            throw new GameError(`Game is not in playing state`);
         }
     }
 
     public checkValidGuess(guess: string): void {
-        if (guess.length != 5) {
-            throw new Error(`Guess must be 5 characters long`);
-        }
-        if (this.hardMode) {
+        if (!guess) {
+            throw new GameError(`Guess cannot be empty`);
+        } else if (guess.length != 5) {
+            throw new GameError(`Guess must be 5 characters long`);
+        } else if (!Evaluator.isGuessValidWord(guess)) {
+            throw new GameError(`Guess is not a valid word`);
+        } else if (this.hardMode) {
             if (Evaluator.hasAbsentLetter(guess, this.status.absentLetters)) {
-                throw new Error(`Guess contains absent letter in hard mode`);
+                throw new GameError(`Guess contains absent letter in hard mode`);
+            } else if (!Evaluator.hasPresentLetters(guess, this.status.presentLetters)) {
+                throw new GameError(`Guess must contain all present letters`);
+            } else if (!Evaluator.hasCorrectLettersInPosition(guess, this.status.correctLetters)) {
+                throw new GameError(`Guess must contain correct letters in correct position`);
             }
-            if (!Evaluator.hasPresentLetters(guess, this.status.presentLetters)) {
-                throw new Error(`Guess must contain all present letters`);
-            }
-            if (!Evaluator.hasCorrectLettersInPosition(guess, this.status.correctLetters)) {
-                throw new Error(`Guess must contain correct letters in correct position`);
-            }
-        }
-        if (!Evaluator.isGuessValidWord(guess)) {
-            throw new Error(`Guess is not a valid word`);
-        }
+        }        
     }
 
     public evaluateGuess(guess: string): IHintLetter[] {
@@ -82,6 +85,15 @@ export default class Wordle implements Game {
     public updateStatusAndGuesses(result: IHintLetter[]): void {
         this.guesses.push(result);
         this.status.update(result);
+    }
+
+    public loadGuesses(guesses: string[][][]): void {
+        this.guesses = guesses.map((guess: string[][]) => {
+            return guess.map((letter: string[]) => ({
+                letter: letter[0],
+                state: <LetterState>letter[1],
+            }));
+        });
     }
 
     public getMode(): string {

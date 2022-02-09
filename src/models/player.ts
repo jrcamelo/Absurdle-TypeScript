@@ -11,7 +11,7 @@ const PlayerSchema = new mongoose.Schema({
         required: false,
     },
     games: {
-        type: [ Game ],
+        type: [Game],
         required: false,
         default: [],
     },

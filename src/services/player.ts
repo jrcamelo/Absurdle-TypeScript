@@ -1,6 +1,6 @@
 import Database from "@/lib/database";
 import Player from "@/models/player";
-import { uuid } from 'uuidv4';
+import { uuid } from "uuidv4";
 
 export async function getPlayer(userToken: string): Promise<typeof Player | undefined> {
     if (!userToken) return undefined;
@@ -12,12 +12,12 @@ export async function getPlayer(userToken: string): Promise<typeof Player | unde
 export async function saveNewPlayerAndGetToken(): Promise<string> {
     await Database.ensureConnection();
     let valid = false;
-    let userToken: string = "";
+    let userToken = ``;
     let i = 0;
     while (!valid) {
-        if (i++ >= 10) throw new Error("Could not create new player");
+        if (i++ >= 10) throw new Error(`Could not create new player`);
         userToken = uuid();
-        if (!await Player.findOne({ userToken })) valid = true;
+        if (!(await Player.findOne({ userToken }))) valid = true;
     }
     const newPlayer = new Player({ userToken });
     await newPlayer.save();
@@ -25,10 +25,10 @@ export async function saveNewPlayerAndGetToken(): Promise<string> {
 }
 
 export async function addNewGame(userToken: string, game: any): Promise<typeof Player> {
-    if (!userToken) throw new Error("No user token");
+    if (!userToken) throw new Error(`No user token`);
     await Database.ensureConnection();
     const player = await Player.findOne({ userToken });
-    if (!player) throw new Error("No player");
+    if (!player) throw new Error(`No player`);
     player.gameCount++;
     player.ongoingGame = game;
     await player.save();
@@ -36,28 +36,28 @@ export async function addNewGame(userToken: string, game: any): Promise<typeof P
 }
 
 export async function getOngoingGame(userToken: string): Promise<any> {
-    if (!userToken) throw new Error("No user token");
+    if (!userToken) throw new Error(`No user token`);
     await Database.ensureConnection();
     const player = await Player.findOne({ userToken });
-    if (!player) throw new Error("No player");
+    if (!player) throw new Error(`No player`);
     return player.ongoingGame;
 }
 
 export async function updateOngoingGame(userToken: string, game: any): Promise<typeof Player> {
-    if (!userToken) throw new Error("No user token");
+    if (!userToken) throw new Error(`No user token`);
     await Database.ensureConnection();
     const player = await Player.findOne({ userToken });
-    if (!player) throw new Error("No player");
+    if (!player) throw new Error(`No player`);
     player.ongoingGame = game;
     await player.save();
     return player;
 }
 
 export async function finishGame(userToken: string, game: any): Promise<typeof Player> {
-    if (!userToken) throw new Error("No user token");
+    if (!userToken) throw new Error(`No user token`);
     await Database.ensureConnection();
     const player = await Player.findOne({ userToken });
-    if (!player) throw new Error("No player");
+    if (!player) throw new Error(`No player`);
     if (player.ongoingGame) {
         player.games.push(player.ongoingGame);
         player.ongoingGame = undefined;
@@ -78,10 +78,10 @@ export async function finishGame(userToken: string, game: any): Promise<typeof P
 }
 
 export async function quitOngoingGame(userToken: string): Promise<typeof Player> {
-    if (!userToken) throw new Error("No user token");
+    if (!userToken) throw new Error(`No user token`);
     await Database.ensureConnection();
     const player = await Player.findOne({ userToken });
-    if (!player) throw new Error("No player");
+    if (!player) throw new Error(`No player`);
     player.ongoingGame = undefined;
     await player.save();
     return player;

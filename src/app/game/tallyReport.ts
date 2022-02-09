@@ -83,11 +83,25 @@ export default class TallyReport {
         );
     }
 
+    static jsonToGame(json: any): Wordle | Absurdle {
+        switch(json[`mode`]) {
+            case GameMode.WORDLE:
+            case GameMode.WORDLE_HARD:
+                return this.jsonToWordle(json);
+            case GameMode.ABSURDLE:
+            case GameMode.ABSURDLE_HARD:
+                return this.jsonToAbsurdle(json);
+            default:
+                throw new Error(`Invalid game mode: ${json[`mode`]}`);
+        }
+        // TODO: Make Daily
+    }
+
     static jsonToWordle(json: any): Wordle {
         const game = new Wordle(json[`mode`] == GameMode.WORDLE_HARD, json[`tries`] || 0);
         game.gameState = json[`gameState`];
         game.status = new Status(undefined, json);
-        game.guesses = json[`guesses`];
+        game.loadGuesses(json[`guesses`]);
         game.answer = json[`answer`];
         return game;
     }
@@ -96,8 +110,7 @@ export default class TallyReport {
         const game = new Absurdle(json[`mode`] == GameMode.ABSURDLE_HARD, json[`tries`] || 0);
         game.gameState = json[`gameState`];
         game.status = new Status(undefined, json);
-        game.guesses = json[`guesses`];
-        game.updateWordBucket();
+        game.loadGuesses(json[`guesses`]);
         return game;
     }
 
@@ -136,8 +149,7 @@ export default class TallyReport {
     }
 
     toUserJson() {
-        const answer = this.gameState == GameState.PLAYING ? `` : this.answer;
-
+        const answer = this.gameState == GameState.PLAYING.toString() ? `` : this.answer;
         return {
             mode: this.mode,
             gameState: this.gameState,
@@ -147,8 +159,8 @@ export default class TallyReport {
             absentLetters: this.absentLetters,
             presentLetters: this.presentLetters,
             correctLetters: this.correctLetters,
-            answer: this.answer,
             remainingWords: this.remainingWords,
+            answer,
         };
     }
 }

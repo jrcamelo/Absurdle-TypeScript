@@ -206,13 +206,10 @@ describe("Wordle", () => {
   });
 
   it("should generate a game from a tally", () => {
-    console.log(TallyReport.fromJson(makeTally()).guesses)
     const wordle = Wordle.fromTally(TallyReport.fromJson(makeTally()));
     expect(wordle.toTally()).toEqual(makeTally());
     wordle.answer = "tests";
     wordle.tryGuess("tests");
-    console.log(wordle.toTally().guesses[0])
-    console.log(makeTallyWon().guesses[0])
     expect(wordle.toTally()).toEqual(makeTallyWon());
   });
 });

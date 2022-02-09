@@ -18,6 +18,8 @@ export default interface Game {
     checkGameState(): void;
     checkValidGuess(guess: string): void;
 
+    loadGuesses(guesses: string[][][]): void;
+
     evaluateGuess(guess: string): IHintLetter[];
     updateStatusAndGuesses(result: IHintLetter[]): void;
 
