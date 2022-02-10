@@ -1,7 +1,7 @@
 import Database from "@/lib/database";
 import type NextApiGameRequest from "@/utils/nextApiGameRequest";
 import { NextApiResponse } from "next";
-import { quitOngoingGame } from "@/services/player";
+import { quitOngoingGame } from "@/services/players";
 import ApiMessage from "../../../utils/apiMessage";
 import ApiError from "@/utils/apiError";
 

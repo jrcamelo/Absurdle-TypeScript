@@ -2,6 +2,7 @@ import Evaluator from "../evaluator";
 import Wordle from "./wordle";
 import { ABSURDLE_LIVES, GameMode, GameState, IHintLetter, LetterState } from "../constants";
 import TallyReport from "./tallyReport";
+import Status from "../status";
 
 interface IStatusGroup {
     status: IHintLetter[];
@@ -12,24 +13,26 @@ export default class Absurdle extends Wordle {
     public wordBucket: string[] = [];
 
     constructor(hardMode = false, tries: number = ABSURDLE_LIVES) {
-        super(hardMode, tries);
+        super(hardMode, undefined, tries);
         this.wordBucket = this.dictionary.getSecrets();
         this.answer = `-----`;
+    }
+    
+    public static fromJson(json: any): Absurdle {
+        const game = new Absurdle(json[`mode`] == GameMode.ABSURDLE_HARD, json[`tries`] || 0);
+        game.gameState = json[`gameState`];
+        game.status = new Status(undefined, json);
+        game.loadGuesses(json[`guesses`]);
+        return game;
     }
 
     public static fromTally(tally: TallyReport): Absurdle {
         const game = new Absurdle(tally.hardMode, tally.tries);
         game.gameState = <GameState>tally.gameState;
-        game.guesses = tally.guesses.map((guess: string[][]): IHintLetter[] =>
-            guess.map((letter: string[]) => ({
-                letter: letter[0],
-                state: <LetterState>letter[1],
-            })),
-        );
         game.status.absentLetters = new Set(tally.absentLetters);
         game.status.presentLetters = new Set(tally.presentLetters);
         game.status.correctLetters = tally.correctLetters;
-        game.updateWordBucket();
+        game.loadGuesses(tally.guesses);
         return game;
     }
 
@@ -92,6 +95,13 @@ export default class Absurdle extends Wordle {
 
     public getRandomRemainingWord(): string {
         return this.wordBucket[Math.floor(Math.random() * this.wordBucket.length)];
+    }
+    
+    public checkForWinOrLoss(result: IHintLetter[]): void {
+        super.checkForWinOrLoss(result);
+        if (this.gameState == GameState.WON) {
+            this.answer = this.wordBucket[0];
+        };
     }
 
     public getMode(): string {

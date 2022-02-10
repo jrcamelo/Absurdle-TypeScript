@@ -1,15 +1,15 @@
 import Wordle from '@/app/game/wordle';
 import Absurdle from '@/app/game/absurdle';
 import Game from '@/app/game/game';
-import { finishGame, getOngoingGame, updateOngoingGame } from '@/services/player';
-import TallyReport from '../app/game/tallyReport';
+import { finishGame, getOngoingGame, updateOngoingGame } from '@/services/players';
 import { GameState } from '@/app/constants';
+import modeToFromJson from '../utils/modeToFromJson';
 
 
 export async function getGame(userToken: string): Promise<Game | Wordle | Absurdle> {
     const gameObject = await getOngoingGame(userToken);
     if (!gameObject) throw new Error(`No ongoing game`);
-    return TallyReport.jsonToGame(gameObject);
+    return modeToFromJson(gameObject.mode, gameObject);
 }
 
 export async function makeAndSaveGuess(userToken: string, game: Game, guess: string) {

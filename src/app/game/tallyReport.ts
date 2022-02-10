@@ -1,7 +1,7 @@
-import { GameMode, GameState } from "../constants";
+import { GameState } from "../constants";
 import Absurdle from "./absurdle";
+import Daily from "./daily";
 import Wordle from "./wordle";
-import Status from "../status";
 
 export default class TallyReport {
     mode: string;
@@ -67,6 +67,20 @@ export default class TallyReport {
             game.getRemainingWords(),
         );
     }
+    
+    static fromDaily(game: Daily): TallyReport {
+        return new TallyReport(
+            game.getMode(),
+            game.gameState,
+            game.tries,
+            game.hardMode,
+            game.guessesToListOfGuesses(),
+            Array.from(game.status.absentLetters),
+            Array.from(game.status.presentLetters),
+            game.status.correctLetters,
+            game.answer,
+        );
+    }
 
     static fromJson(json: any): TallyReport {
         return new TallyReport(
@@ -81,37 +95,6 @@ export default class TallyReport {
             json.answer,
             json.remainingWords,
         );
-    }
-
-    static jsonToGame(json: any): Wordle | Absurdle {
-        switch(json[`mode`]) {
-            case GameMode.WORDLE:
-            case GameMode.WORDLE_HARD:
-                return this.jsonToWordle(json);
-            case GameMode.ABSURDLE:
-            case GameMode.ABSURDLE_HARD:
-                return this.jsonToAbsurdle(json);
-            default:
-                throw new Error(`Invalid game mode: ${json[`mode`]}`);
-        }
-        // TODO: Make Daily
-    }
-
-    static jsonToWordle(json: any): Wordle {
-        const game = new Wordle(json[`mode`] == GameMode.WORDLE_HARD, json[`tries`] || 0);
-        game.gameState = json[`gameState`];
-        game.status = new Status(undefined, json);
-        game.loadGuesses(json[`guesses`]);
-        game.answer = json[`answer`];
-        return game;
-    }
-
-    static jsonToAbsurdle(json: any): Absurdle {
-        const game = new Absurdle(json[`mode`] == GameMode.ABSURDLE_HARD, json[`tries`] || 0);
-        game.gameState = json[`gameState`];
-        game.status = new Status(undefined, json);
-        game.loadGuesses(json[`guesses`]);
-        return game;
     }
 
     toJson() {
@@ -148,7 +131,7 @@ export default class TallyReport {
         return { ...this.toJson(), userToken };
     }
 
-    toUserJson() {
+    toUserJson(code? : string) {
         const answer = this.gameState == GameState.PLAYING.toString() ? `` : this.answer;
         return {
             mode: this.mode,
@@ -161,6 +144,7 @@ export default class TallyReport {
             correctLetters: this.correctLetters,
             remainingWords: this.remainingWords,
             answer,
+            code,
         };
     }
 }

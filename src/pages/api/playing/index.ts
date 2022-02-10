@@ -1,9 +1,9 @@
 import Database from "@/lib/database";
 import type NextApiGameRequest from "@/utils/nextApiGameRequest";
 import { NextApiResponse } from "next";
-import { getOngoingGame } from "@/services/player";
+import { getOngoingGame } from "@/services/players";
 import ApiError from "@/utils/apiError";
-import { getGame } from "@/services/game";
+import { getGame } from "@/services/games";
 
 export default async function handler(req: NextApiGameRequest, res: NextApiResponse) {
     await Database.ensureConnection();

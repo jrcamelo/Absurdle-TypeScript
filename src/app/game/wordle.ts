@@ -17,15 +17,32 @@ export default class Wordle implements Game {
 
     public dictionary: Dictionary;
 
-    constructor(hardMode = false, tries: number = DEFAULT_LIVES) {
+    constructor(hardMode = false, code?: string, tries: number = DEFAULT_LIVES) {
         this.dictionary = Dictionary.getInstance();
         this.answer = this.dictionary.getRandomSecret();
+        if (code) {
+            console.log(`code: ${code}`);
+            const secret = this.dictionary.getAnswerFromCode(code)
+            console.log(`secret: ${secret}`);
+            if (secret) {
+                this.answer = secret;
+            }
+        }
         this.hardMode = hardMode;
         this.tries = tries;
     }
+    
+    public static fromJson(json: any): Wordle {
+        const game = new Wordle(json[`mode`] == GameMode.WORDLE_HARD, undefined, json[`tries`] || 0);
+        game.gameState = json[`gameState`];
+        game.status = new Status(undefined, json);
+        game.loadGuesses(json[`guesses`]);
+        game.answer = json[`answer`];
+        return game;
+    }
 
     public static fromTally(tally: TallyReport): Wordle {
-        const game = new Wordle(tally.hardMode, tally.tries);
+        const game = new Wordle(tally.hardMode, undefined, tally.tries);
         game.gameState = <GameState>tally.gameState;
         game.guesses = tally.guesses.map((guess: string[][]): IHintLetter[] =>
             guess.map((letter: string[]) => ({
@@ -130,6 +147,6 @@ export default class Wordle implements Game {
     }
 
     public toUserJson() {
-        return TallyReport.fromWordle(this).toUserJson();
+        return TallyReport.fromWordle(this).toUserJson(this.dictionary.getCodeForAnswer(this.answer));
     }
 }

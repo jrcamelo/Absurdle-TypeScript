@@ -1,10 +1,10 @@
 import Database from "@/lib/database";
 import type NextApiGameRequest from "@/utils/nextApiGameRequest";
 import { NextApiResponse } from "next";
-import { getOngoingGame } from "@/services/player";
+import { getOngoingGame } from "@/services/players";
 import ApiError from "@/utils/apiError";
 import Game from '../../../app/game/game';
-import { getGame, makeAndSaveGuess } from "@/services/game";
+import { getGame, makeAndSaveGuess } from "@/services/games";
 import GameError from '@/utils/gameError';
 
 export default async function handler(req: NextApiGameRequest, res: NextApiResponse) {
