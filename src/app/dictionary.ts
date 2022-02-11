@@ -1,12 +1,8 @@
-import { PathOrFileDescriptor, readFileSync } from "fs";
 import { shuffle } from "shuffle-seed";
 import * as base32 from "hi-base32";
-import * as Path from "path";
 import getNumberFromDate from "@/utils/dailyNumber";
-
-const DATA_FOLDER = `./data/`;
-const WORDS_FILE = `words.txt`;
-const SECRETS_FILE = `secrets.txt`;
+import secrets from "@/data/secrets";
+import words from "@/data/words";
 
 export default class Dictionary {
     private static _instance: Dictionary;
@@ -88,25 +84,12 @@ export default class Dictionary {
         return this._secrets[index];
     }
 
-    private readWordsFile(): string[] {
-        return this.readFileAsArray(Path.resolve(DATA_FOLDER, WORDS_FILE));
-    }
-
     private getShuffledSecrets(): string[] {
-        return shuffle(this.readSecretsFile(), process.env.DAILY_SEED);
+        return shuffle([...secrets], process.env.DAILY_SEED);
     }
 
     private getShuffledValidWords(): string[] {
-        const words = this.readWordsFile().concat(this.getSecrets());
-        return shuffle(words, process.env.VALID_WORDS_SEED);
-    }
-
-    private readSecretsFile(): string[] {
-        return this.readFileAsArray(Path.resolve(DATA_FOLDER, SECRETS_FILE));
-    }
-
-    private readFileAsArray(path: PathOrFileDescriptor): string[] {
-        return readFileSync(path, `utf8`).split(`\r\n`);
+        return shuffle([...words, ...secrets], process.env.VALID_WORDS_SEED);
     }
 
     private listToMap(list: string[]): Map<string, number> {
