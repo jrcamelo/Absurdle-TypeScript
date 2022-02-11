@@ -30,7 +30,9 @@ export default class Status {
                     this.presentLetters.add(letter);
                 }
             } else {
-                this.absentLetters.add(letter);
+                if (!this.correctLetters.includes(letter)) {
+                    this.absentLetters.add(letter);
+                }
             }
         }
     }
