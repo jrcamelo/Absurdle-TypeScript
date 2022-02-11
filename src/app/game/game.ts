@@ -15,6 +15,7 @@ export default interface Game {
     dictionary: Dictionary;
 
     tryGuess(guess: string): void;
+    getRandomGuess(): string;
 
     checkGameState(): void;
     checkValidGuess(guess: string): void;

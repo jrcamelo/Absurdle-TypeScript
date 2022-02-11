@@ -4,7 +4,7 @@ import Evaluator from "../evaluator";
 import Game from "./game";
 import Status from "../status";
 import TallyReport from "./tallyReport";
-import GameError from "../../utils/gameError";
+import GameError from '@/utils/gameError';
 
 export default class Wordle implements Game {
     public answer: string;
@@ -73,6 +73,13 @@ export default class Wordle implements Game {
         const result = this.evaluateGuess(guess);
         this.updateStatusAndGuesses(result);
         this.checkForWinOrLoss(result);
+    }
+
+    public getRandomGuess(): string {
+        if (this.hardMode) {
+            throw new GameError("Cannot generate random guess in hard mode");
+        }
+        return this.dictionary.getRandomSecret();
     }
 
     public checkGameState(): void {

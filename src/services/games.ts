@@ -13,11 +13,15 @@ export async function getGame(userToken: string): Promise<Game | Wordle | Absurd
     return modeToFromJson(gameObject.mode, gameObject);
 }
 
-export async function makeAndSaveGuess(userToken: string, game: Game, guess: string) {
+export async function makeGuessAndSave(userToken: string, game: Game, guess: string) {
     game.tryGuess(guess);
     if (game.gameState == GameState.PLAYING) {
         await updateOngoingGame(userToken, game.toDatabaseTally(userToken));
     } else {
         await finishGame(userToken, game.toDatabaseTally(userToken));
     }
+}
+
+export async function makeRandomGuessAndSave(userToken: string, game: Game) {
+    return await makeGuessAndSave(userToken, game, game.getRandomGuess());
 }
