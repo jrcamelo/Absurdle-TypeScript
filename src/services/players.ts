@@ -1,9 +1,9 @@
 import Database from "@/lib/database";
 import Player from "@/models/player";
 import { uuid } from "uuidv4";
-import ApiError from '../utils/apiError';
-import { GameMode } from '../app/constants';
-import PlayerStats from '../app/playerStats';
+import ApiError from "../utils/apiError";
+import { GameMode } from "../app/constants";
+import PlayerStats from "../app/playerStats";
 import GlobalStats from "@/models/globalStats";
 
 export async function getPlayer(userToken: string): Promise<typeof Player | undefined> {
@@ -38,7 +38,7 @@ export async function addNewGame(userToken: string, game: any): Promise<typeof P
         today.setHours(0, 0, 0, 0);
         if (+player.lastDailyGame == +today) {
             throw new ApiError(`You have already played today's game`, 400);
-        }   
+        }
         player.lastDailyGame = today;
     }
     player.gameCount++;
@@ -86,7 +86,7 @@ async function saveDailyStats(game: any, player: any) {
     date.setHours(0, 0, 0, 0);
     let globalStats = await GlobalStats.findOne({ date });
     if (!globalStats) {
-        globalStats = await GlobalStats.create({ date })
+        globalStats = await GlobalStats.create({ date });
     }
     const stats = PlayerStats.fromGame(game);
     PlayerStats.addToPlayer(game, player);

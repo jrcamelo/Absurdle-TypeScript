@@ -1,8 +1,8 @@
-import { NextApiResponse } from 'next';
-import ApiError from './apiError';
-import GameError from '@/utils/gameError';
+import { NextApiResponse } from "next";
+import ApiError from "./apiError";
+import GameError from "@/utils/gameError";
 
-export default function(res: NextApiResponse, error: any, defaultMessage: string, defaultCode: number) {
+export default function (res: NextApiResponse, error: any, defaultMessage: string, defaultCode: number) {
     if (error instanceof ApiError || error instanceof GameError) {
         return res.status(error.statusCode).json(error.toJson());
     } else {

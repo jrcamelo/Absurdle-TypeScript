@@ -3,7 +3,7 @@ import type NextApiGameRequest from "@/utils/nextApiGameRequest";
 import { NextApiResponse } from "next";
 import { saveNewPlayerAndGetToken, getPlayerStats } from "@/services/players";
 
-import ApiError from '../../utils/apiError';
+import ApiError from "../../utils/apiError";
 
 export default async function handler(req: NextApiGameRequest, res: NextApiResponse) {
     await Database.ensureConnection();
@@ -18,6 +18,6 @@ export default async function handler(req: NextApiGameRequest, res: NextApiRespo
         res.status(200).json(stats.toJson());
     } catch (e) {
         console.log(e);
-        return res.status(500).json(new ApiError("Could not get player stats", 500));
+        return res.status(500).json(new ApiError(`Could not get player stats`, 500));
     }
 }

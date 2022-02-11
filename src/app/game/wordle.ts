@@ -4,7 +4,7 @@ import Evaluator from "../evaluator";
 import Game from "./game";
 import Status from "../status";
 import TallyReport from "./tallyReport";
-import GameError from '@/utils/gameError';
+import GameError from "@/utils/gameError";
 
 export default class Wordle implements Game {
     public answer: string;
@@ -23,7 +23,7 @@ export default class Wordle implements Game {
         this.answer = this.dictionary.getRandomSecret();
         if (code) {
             console.log(`code: ${code}`);
-            const secret = this.dictionary.getAnswerFromCode(code)
+            const secret = this.dictionary.getAnswerFromCode(code);
             console.log(`secret: ${secret}`);
             if (secret) {
                 this.answer = secret;
@@ -33,14 +33,14 @@ export default class Wordle implements Game {
         this.tries = tries;
         this.createdAt = new Date();
     }
-    
+
     public static fromJson(json: any): Wordle {
         const game = new Wordle(json[`mode`] == GameMode.WORDLE_HARD, undefined, json[`tries`] || 0);
         game.gameState = json[`gameState`];
         game.status = new Status(undefined, json);
         game.loadGuesses(json[`guesses`]);
         game.answer = json[`answer`];
-        game.createdAt = json[`createdAt`]
+        game.createdAt = json[`createdAt`];
         return game;
     }
 
@@ -77,7 +77,7 @@ export default class Wordle implements Game {
 
     public getRandomGuess(): string {
         if (this.hardMode) {
-            throw new GameError("Cannot generate random guess in hard mode");
+            throw new GameError(`Cannot generate random guess in hard mode`);
         }
         return this.dictionary.getRandomSecret();
     }
@@ -103,7 +103,7 @@ export default class Wordle implements Game {
             } else if (!Evaluator.hasCorrectLettersInPosition(guess, this.status.correctLetters)) {
                 throw new GameError(`Guess must contain correct letters in correct position`);
             }
-        }        
+        }
     }
 
     public evaluateGuess(guess: string): IHintLetter[] {

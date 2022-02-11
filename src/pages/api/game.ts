@@ -3,7 +3,7 @@ import type NextApiGameRequest from "@/utils/nextApiGameRequest";
 import { NextApiResponse } from "next";
 import { saveNewPlayerAndGetToken, addNewGame, getOngoingGame } from "@/services/players";
 import modeToNewGame from "@/utils/modeToNewGame";
-import modeToFromJson from '../../utils/modeToFromJson';
+import modeToFromJson from "../../utils/modeToFromJson";
 import errorHandler from "@/utils/errorHandler";
 
 export default async function handler(req: NextApiGameRequest, res: NextApiResponse) {
@@ -30,7 +30,7 @@ export default async function handler(req: NextApiGameRequest, res: NextApiRespo
             await addNewGame(userToken, game.toDatabaseTally(userToken));
             return res.status(200).json(game.toUserJson());
         } catch (error) {
-            return errorHandler(res, error, "Could not create new game", 500);
+            return errorHandler(res, error, `Could not create new game`, 500);
         }
     }
 }

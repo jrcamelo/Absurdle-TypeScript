@@ -1,6 +1,6 @@
 import Evaluator from "../evaluator";
 import Wordle from "./wordle";
-import { ABSURDLE_LIVES, GameMode, GameState, IHintLetter, LetterState } from "../constants";
+import { ABSURDLE_LIVES, GameMode, GameState, IHintLetter } from "../constants";
 import TallyReport from "./tallyReport";
 import Status from "../status";
 
@@ -17,7 +17,7 @@ export default class Absurdle extends Wordle {
         this.wordBucket = this.dictionary.getSecrets();
         this.answer = `-----`;
     }
-    
+
     public static fromJson(json: any): Absurdle {
         const game = new Absurdle(json[`mode`] == GameMode.ABSURDLE_HARD, json[`tries`] || 0);
         game.gameState = json[`gameState`];
@@ -41,7 +41,7 @@ export default class Absurdle extends Wordle {
     public evaluateGuess(guess: string): IHintLetter[] {
         return this.evaluateGuessAndUpdateWordBucket(guess);
     }
-    
+
     public loadGuesses(guesses: string[][][]): void {
         super.loadGuesses(guesses);
         for (const guess of this.guessesToList()) {
@@ -98,12 +98,12 @@ export default class Absurdle extends Wordle {
     public getRandomRemainingWord(): string {
         return this.wordBucket[Math.floor(Math.random() * this.wordBucket.length)];
     }
-    
+
     public checkForWinOrLoss(result: IHintLetter[]): void {
         super.checkForWinOrLoss(result);
         if (this.gameState == GameState.WON) {
             this.answer = this.wordBucket[0];
-        };
+        }
     }
 
     public getMode(): string {

@@ -72,7 +72,7 @@ export default class TallyReport {
             game.getRemainingWords(),
         );
     }
-    
+
     static fromDaily(game: Daily): TallyReport {
         return new TallyReport(
             game.getMode(),
@@ -140,7 +140,7 @@ export default class TallyReport {
         return { ...this.toJson(), userToken };
     }
 
-    toUserJson(code? : string) {
+    toUserJson(code?: string) {
         const answer = this.gameState == GameState.PLAYING.toString() ? `` : this.answer;
         return {
             mode: this.mode,

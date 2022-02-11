@@ -1,10 +1,9 @@
 import Absurdle from "@/app/game/absurdle";
 import Wordle from "@/app/game/wordle";
-import Daily from '@/app/game/daily';
-import Game from '../app/game/game';
+import Daily from "@/app/game/daily";
 
 export default function modeToFromJson(mode: string, json: any): Daily | Wordle | Absurdle {
-    switch(mode) {
+    switch (mode) {
         case `wordle`:
         case `wordle-hard`:
             return Wordle.fromJson(json);

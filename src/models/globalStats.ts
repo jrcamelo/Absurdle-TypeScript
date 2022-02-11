@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const StatsSchema = new mongoose.Schema({
     date: {
         type: Date,
-        required: true
+        required: true,
     },
     winCount: {
         type: Number,

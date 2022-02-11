@@ -17,7 +17,7 @@ export default class Dictionary {
     private _secrets_map: Map<string, number>;
 
     private constructor() {
-        this._secrets = this.getShuffledSecrets()
+        this._secrets = this.getShuffledSecrets();
         this._valid_words = this.getShuffledValidWords();
         this._valid_words_map = this.listToMap(this._valid_words);
         this._secrets_map = this.listToMap(this._secrets);
@@ -32,7 +32,7 @@ export default class Dictionary {
 
     public getTodaysSecret(): string {
         const today = new Date();
-        return this.getDailySecret(today);        
+        return this.getDailySecret(today);
     }
 
     public getDailySecret(date: Date): string {
@@ -72,7 +72,7 @@ export default class Dictionary {
 
     private getSecretFromNumber(number: number): string {
         const limit = this._secrets.length;
-        const secretIndex = (number % limit + limit) % limit;
+        const secretIndex = ((number % limit) + limit) % limit;
         return this._secrets[secretIndex];
     }
 
@@ -91,7 +91,7 @@ export default class Dictionary {
     private readWordsFile(): string[] {
         return this.readFileAsArray(Path.resolve(DATA_FOLDER, WORDS_FILE));
     }
-    
+
     private getShuffledSecrets(): string[] {
         return shuffle(this.readSecretsFile(), process.env.DAILY_SEED);
     }

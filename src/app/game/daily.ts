@@ -1,8 +1,8 @@
-import { DEFAULT_LIVES, GameMode } from '../constants';
-import Status from '../status';
-import TallyReport from './tallyReport';
-import Wordle from './wordle';
-import getNumberFromDate from '../../utils/dailyNumber';
+import { DEFAULT_LIVES, GameMode } from "../constants";
+import Status from "../status";
+import TallyReport from "./tallyReport";
+import Wordle from "./wordle";
+import getNumberFromDate from "../../utils/dailyNumber";
 
 export default class Daily extends Wordle {
     constructor(tries: number = DEFAULT_LIVES, date?: Date) {
@@ -20,7 +20,7 @@ export default class Daily extends Wordle {
         game.status = new Status(undefined, json);
         game.loadGuesses(json[`guesses`]);
         game.answer = json[`answer`];
-        game.createdAt = json[`createdAt`]
+        game.createdAt = json[`createdAt`];
         return game;
     }
 

@@ -11,15 +11,17 @@ export default class PlayerStats {
     winAt5: number;
     winAt6: number;
 
-    constructor(gameCount: number, 
-                winCount: number, 
-                lossCount: number, 
-                winAt1: number = 0, 
-                winAt2: number = 0, 
-                winAt3: number = 0, 
-                winAt4: number = 0, 
-                winAt5: number = 0, 
-                winAt6: number = 0) {
+    constructor(
+        gameCount: number,
+        winCount: number,
+        lossCount: number,
+        winAt1 = 0,
+        winAt2 = 0,
+        winAt3 = 0,
+        winAt4 = 0,
+        winAt5 = 0,
+        winAt6 = 0,
+    ) {
         this.gameCount = gameCount;
         this.winCount = winCount;
         this.lossCount = lossCount;
@@ -61,18 +63,18 @@ export default class PlayerStats {
 
     static fromGame(game: any): PlayerStats {
         if (game.gameState == GameState.WON) {
-            let winCount = 1;
-            let winAt1 = game.tries === 6 ? 1 : 0;
-            let winAt2 = game.tries === 5 ? 1 : 0;
-            let winAt3 = game.tries === 4 ? 1 : 0;
-            let winAt4 = game.tries === 3 ? 1 : 0;
-            let winAt5 = game.tries === 2 ? 1 : 0;
-            let winAt6 = game.tries === 1 ? 1 : 0;
-            return new PlayerStats(1, winCount, 0, winAt1, winAt2, winAt3, winAt4, winAt5, winAt6)
+            const winCount = 1;
+            const winAt1 = game.tries === 6 ? 1 : 0;
+            const winAt2 = game.tries === 5 ? 1 : 0;
+            const winAt3 = game.tries === 4 ? 1 : 0;
+            const winAt4 = game.tries === 3 ? 1 : 0;
+            const winAt5 = game.tries === 2 ? 1 : 0;
+            const winAt6 = game.tries === 1 ? 1 : 0;
+            return new PlayerStats(1, winCount, 0, winAt1, winAt2, winAt3, winAt4, winAt5, winAt6);
         } else if (game.gameState == GameState.LOST) {
             return new PlayerStats(1, 0, 1);
         } else {
-            return new PlayerStats(1, 0, 0)
+            return new PlayerStats(1, 0, 0);
         }
     }
 

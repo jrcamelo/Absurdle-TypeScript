@@ -1,7 +1,6 @@
 import NextApiGameRequest from "@/utils/nextApiGameRequest";
 import { NextResponse } from "next/server";
 import ApiError from "@/utils/apiError";
-import Database from "@/lib/database";
 
 export const middleware = async (req: NextApiGameRequest) => {
     if (!req.cookies?.token) {
