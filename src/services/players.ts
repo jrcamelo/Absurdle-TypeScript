@@ -65,22 +65,6 @@ export async function updateOngoingGame(userToken: string, game: any): Promise<t
     return player;
 }
 
-export async function finishGame(userToken: string, game: any): Promise<typeof Player> {
-    if (!userToken) throw new ApiError(`No user token`);
-    await Database.ensureConnection();
-    const player = await Player.findOne({ userToken });
-    if (!player) throw new ApiError(`No player`);
-    if (player.ongoingGame) {
-        player.games.push(player.ongoingGame);
-        player.ongoingGame = undefined;
-    }
-    if (game.mode == GameMode.DAILY) {
-        await saveDailyStats(game, player);
-    }
-    await player.save();
-    return player;
-}
-
 async function saveDailyStats(game: any, player: any) {
     const date = new Date(game.createdAt);
     date.setHours(0, 0, 0, 0);
@@ -99,6 +83,22 @@ async function saveDailyStats(game: any, player: any) {
     globalStats.winAt5 += stats.winAt5;
     globalStats.winAt6 += stats.winAt6;
     await globalStats.save();
+}
+
+export async function finishGame(userToken: string, game: any): Promise<typeof Player> {
+    if (!userToken) throw new ApiError(`No user token`);
+    await Database.ensureConnection();
+    const player = await Player.findOne({ userToken });
+    if (!player) throw new ApiError(`No player`);
+    if (player.ongoingGame) {
+        player.games.push(player.ongoingGame);
+        player.ongoingGame = undefined;
+    }
+    if (game.mode == GameMode.DAILY) {
+        await saveDailyStats(game, player);
+    }
+    await player.save();
+    return player;
 }
 
 export async function quitOngoingGame(userToken: string): Promise<typeof Player> {
