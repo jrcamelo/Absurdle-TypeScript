@@ -82,7 +82,7 @@ export async function finishGame(userToken: string, game: any): Promise<typeof P
 }
 
 async function saveDailyStats(game: any, player: any) {
-    const date = game.createdAt;
+    const date = new Date(game.createdAt);
     date.setHours(0, 0, 0, 0);
     let globalStats = await GlobalStats.findOne({ date });
     if (!globalStats) {
