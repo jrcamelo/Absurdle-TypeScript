@@ -26,6 +26,7 @@
   },
   "dependencies": {
     "@types/shuffle-seed": "1.1.0",
+    "@types/swagger-ui-react": "4.1.1",
     "@types/uuid": "8.3.4",
     "dotenv": "16.0.0",
     "eslint-plugin-import": "*",
@@ -33,9 +34,11 @@
     "mongodb": "4.3.1",
     "mongoose": "6.2.1",
     "next": "12.0.10",
+    "next-swagger-doc": "0.1.12",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "shuffle-seed": "1.1.6",
+    "swagger-ui-react": "4.5.0",
     "uuid": "8.3.2",
     "winston": "3.5.1"
   },

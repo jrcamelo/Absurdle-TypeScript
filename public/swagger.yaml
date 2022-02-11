@@ -1,0 +1,242 @@
+openapi: 3.0.0
+servers:
+  - description: camelo.dev
+    url: https://api.wordle.camelo.dev/api/
+info:
+  description: API for playing Absurdle by Camelo
+  version: "1.0.0"
+  title: Absurdle API
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+  contact:
+    url: https://www.camelo.dev
+tags:
+  - name: playing
+    description: Operations while there is a game being played
+paths:
+  /game:
+    get:
+      summary: Gets an old or new game
+      operationId: game
+      description: |
+        Takes a token and returns an ongoing game or a new one if there is none. You can use the mode parameter to choose the game mode.                                     
+      parameters:
+        - in: cookie
+          name: token
+          description: Player id to save games and stats
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: mode
+          description: Chooses the game mode for a new game
+          required: false
+          schema:
+            type: string
+            default: daily
+            enum: [daily, wordle, absurdle, wordle-hard, absurdle-hard]
+      responses:
+        '200':
+          description: New or old game
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Game'
+        '400':
+          description: bad input parameter
+          
+  /playing/guess:
+    post:
+      tags:
+        - playing
+      summary: Makes a guess for the answer
+      operationId: guess
+      description: |
+        Takes a token and a word, and, if there is an ongoing game, adds a guess to the guess list
+      parameters:
+        - in: cookie
+          name: token
+          description: player id to save games and stats
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Request with the guessed word
+        required: true
+        content:
+          text:
+            schema:
+              $ref: '#/components/schemas/Guess'
+            example: 'tests'
+      responses:
+        '200':
+          description: Game with updated state
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Game'
+        '400':
+          description: bad input parameter
+          
+  /playing/random:
+    post:
+      tags:
+        - playing
+      summary: Makes a random guess for the answer
+      operationId: random
+      description: |
+        Takes a token and, if there is an ongoing game, makes a random guess
+      parameters:
+        - in: cookie
+          name: token
+          description: Player id to save games and stats
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Game with updated state
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Game'
+        '400':
+          description: bad input parameter
+        '500':
+          description: impossible request
+
+  /playing/giveup:
+    post:
+      tags:
+        - playing
+      summary: Finishes the current game and gets the answer
+      operationId: giveup
+      description: |
+        Takes a token, and if there is an ongoing game, finishes it
+      parameters:
+        - in: cookie
+          name: token
+          description: Player id to save games and stats
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Game with updated state
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Game'
+        '400':
+          description: bad input parameter
+  /stats:
+    get:
+      summary: Gets the stats for the latest daily games
+      operationId: stats
+      description: |
+        Gets a list of statistics about the latest daily wordle games
+      parameters: 
+        - in: query
+          name: day
+          description: Day number
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Stats
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Stats'
+        '500':
+          description: something went wrong
+          
+  /me:
+    get:
+      summary: Gets player's personal stats
+      operationId: me
+      description: |
+        Takes a token and returns a list of statistics about the player past games
+      parameters:
+        - in: cookie
+          name: token
+          description: Player id to save games and stats
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Stats
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PlayerStats'
+        '400':
+          description: bad input parameter
+        '500':
+          description: something went wrong
+            
+        
+          
+components:
+  schemas:
+    Game:
+      type: object
+      properties:
+        mode:
+          type: string
+          example: wordle
+        gameState:
+          type: string
+          example: playing
+        createdAt:
+          type: string
+          format: date-time
+          example: '2022-02-25T00:00:00.001Z'
+        hardMode:
+          type: boolean
+          example: false
+        tries:
+          type: integer
+          example: 6
+        guesses:
+          type: object
+          example: []
+        absentLetters:
+          type: object
+          example: []
+        presentLetters:
+          type: object
+          example: []
+        correctLetters:
+          type: object
+          example: []
+        remainingWords:
+          type: integer
+          example: -1
+        answer:
+          type: string
+          example: ""
+        code:
+          type: string
+          example: ""
+      description: Ongoing or new game
+          
+    Guess:
+      type: string
+      minLength: 5
+      maxLength: 5
+      pattern: '/[^a-z]/g'
+      description: 5 letter lowercase word for guessing
+      
+    Stats:
+      type: object
+      
+    PlayerStats:
+      type: object

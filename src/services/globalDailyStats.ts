@@ -31,4 +31,3 @@ export async function getGlobalStats(dayNumber?: number): Promise<any> {
     const stats = await GlobalStats.findOne({ date });
     return globalStatsToJson(stats, date);
 }
-
