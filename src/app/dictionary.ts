@@ -1,6 +1,6 @@
 import { shuffle } from "shuffle-seed";
 import * as base32 from "hi-base32";
-import getNumberFromDate from "@/utils/dailyNumber";
+import { getNumberFromDate } from "@/utils/dailyNumber";
 import secrets from "@/data/secrets";
 import words from "@/data/words";
 
@@ -38,6 +38,11 @@ export default class Dictionary {
     public getCodeForAnswer(answer: string): string {
         const fake = this.getFakeFromSecret(answer)!;
         return base32.encode(fake);
+    }
+
+    public getDailySecretCode(date: Date): string {
+        const answer = this.getDailySecret(date);
+        return this.getCodeForAnswer(answer);
     }
 
     public getAnswerFromCode(code: string): string | null {
