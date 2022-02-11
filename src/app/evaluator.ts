@@ -11,7 +11,7 @@ export default class Evaluator {
             } else if (answer.includes(guess[i])) {
                 const presentCount = result.filter((l) => l.state === LetterState.PRESENT).length;
                 const answerCount = answer.split(``).filter((l) => l === guess[i]).length;
-                if (presentCount < answerCount) {
+                if (presentCount <= answerCount) {
                     result.push({
                         letter: guess[i],
                         state: LetterState.PRESENT,
