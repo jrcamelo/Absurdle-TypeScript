@@ -1,5 +1,6 @@
 import Database from "@/lib/database";
 import Player from "@/models/player";
+import PlayerStats from "@/app/playerStats";
 import { uuid } from "uuidv4";
 
 export async function getPlayer(userToken: string): Promise<typeof Player | undefined> {
@@ -85,4 +86,12 @@ export async function quitOngoingGame(userToken: string): Promise<typeof Player>
     player.ongoingGame = undefined;
     await player.save();
     return player;
+}
+
+export async function getPlayerStats(userToken: string): Promise<PlayerStats> {
+    if (!userToken) throw new Error(`No user token`);
+    await Database.ensureConnection();
+    const player = await Player.findOne({ userToken });
+    if (!player) throw new Error(`No player`);
+    return PlayerStats.fromPlayer(player);
 }
