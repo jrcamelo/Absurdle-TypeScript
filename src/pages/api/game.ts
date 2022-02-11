@@ -4,6 +4,7 @@ import { NextApiResponse } from "next";
 import { saveNewPlayerAndGetToken, addNewGame, getOngoingGame } from "@/services/players";
 import modeToNewGame from "@/utils/modeToNewGame";
 import modeToFromJson from '../../utils/modeToFromJson';
+import errorHandler from "@/utils/errorHandler";
 
 export default async function handler(req: NextApiGameRequest, res: NextApiResponse) {
     await Database.ensureConnection();
@@ -25,7 +26,11 @@ export default async function handler(req: NextApiGameRequest, res: NextApiRespo
         }
         console.log(`code: ${code} and mode: ${mode}`);
         const game = modeToNewGame(mode, code);
-        await addNewGame(userToken, game.toDatabaseTally(userToken));
-        res.status(200).json(game.toUserJson());
+        try {
+            await addNewGame(userToken, game.toDatabaseTally(userToken));
+            return res.status(200).json(game.toUserJson());
+        } catch (error) {
+            return errorHandler(res, error, "Could not create new game", 500);
+        }
     }
 }

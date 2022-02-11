@@ -6,6 +6,7 @@ import ApiError from "@/utils/apiError";
 import Game from '../../../app/game/game';
 import { getGame, makeAndSaveGuess } from "@/services/games";
 import GameError from '@/utils/gameError';
+import errorHandler from '@/utils/errorHandler';
 
 export default async function handler(req: NextApiGameRequest, res: NextApiResponse) {
     await Database.ensureConnection();
@@ -18,18 +19,7 @@ export default async function handler(req: NextApiGameRequest, res: NextApiRespo
         }
         await makeAndSaveGuess(userToken, game, guess);
         res.status(200).json(game.toUserJson());
-
-
-
     } catch (error: any) {
-        if (error instanceof ApiError) {
-            res.status(500).json(new ApiError(error.message, 500).toJson());
-        } else if (error instanceof GameError) {
-            res.status(400).json(new GameError(error.message, 400).toJson());
-        } else {
-            // res.status(500).json(new ApiError("Error", 500).toJson());
-            // TODO: Change this
-            res.status(500).json(new ApiError(error.message, 400).toJson());
-        }
+        return errorHandler(res, error, "Could not make guess", 500);
     }
 }
