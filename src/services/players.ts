@@ -1,6 +1,6 @@
 import Database from "@/lib/database";
 import Player from "@/models/player";
-import { uuid } from "uuidv4";
+import { v4 } from "uuid";
 import ApiError from "../utils/apiError";
 import { GameMode } from "../app/constants";
 import PlayerStats from "../app/playerStats";
@@ -20,7 +20,7 @@ export async function saveNewPlayerAndGetToken(): Promise<string> {
     let i = 0;
     while (!valid) {
         if (i++ >= 10) throw new ApiError(`Could not create new player`);
-        userToken = uuid();
+        userToken = v4();
         if (!(await Player.findOne({ userToken }))) valid = true;
     }
     const newPlayer = new Player({ userToken });
