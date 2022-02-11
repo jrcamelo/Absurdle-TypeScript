@@ -32,6 +32,15 @@ export async function addNewGame(userToken: string, game: any): Promise<typeof P
     await Database.ensureConnection();
     const player = await Player.findOne({ userToken });
     if (!player) throw new ApiError(`No player`);
+    if (game.mode == GameMode.DAILY) {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        console.log(`${+player.lastDailyGame} == ${+today} = ${+player.lastDailyGame == +today}`)
+        if (+player.lastDailyGame == +today) {
+            throw new ApiError(`You have already played today's game`, 400);
+        }   
+        player.lastDailyGame = today;
+    }
     player.gameCount++;
     player.ongoingGame = game;
     await player.save();

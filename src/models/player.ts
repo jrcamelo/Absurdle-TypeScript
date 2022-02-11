@@ -15,6 +15,10 @@ const PlayerSchema = new mongoose.Schema({
         required: false,
         default: [],
     },
+    lastDailyGame: {
+        type: Date,
+        required: false,
+    },
     // Stats
     gameCount: {
         type: Number,
