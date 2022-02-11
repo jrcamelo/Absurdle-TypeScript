@@ -1,4 +1,6 @@
-export default class Stats {
+import { GameState } from "./constants";
+
+export default class PlayerStats {
     gameCount: number;
     winCount: number;
     lossCount: number;
@@ -12,12 +14,12 @@ export default class Stats {
     constructor(gameCount: number, 
                 winCount: number, 
                 lossCount: number, 
-                winAt1: number, 
-                winAt2: number, 
-                winAt3: number, 
-                winAt4: number, 
-                winAt5: number, 
-                winAt6: number) {
+                winAt1: number = 0, 
+                winAt2: number = 0, 
+                winAt3: number = 0, 
+                winAt4: number = 0, 
+                winAt5: number = 0, 
+                winAt6: number = 0) {
         this.gameCount = gameCount;
         this.winCount = winCount;
         this.lossCount = lossCount;
@@ -43,8 +45,8 @@ export default class Stats {
         };
     }
 
-    static fromPlayer(player: any): Stats {
-        return new Stats(
+    static fromPlayer(player: any): PlayerStats {
+        return new PlayerStats(
             player.gameCount,
             player.winCount,
             player.lossCount,
@@ -55,5 +57,36 @@ export default class Stats {
             player.winAt5,
             player.winAt6,
         );
+    }
+
+    static fromGame(game: any): PlayerStats {
+        if (game.gameState == GameState.WON) {
+            let winCount = 1;
+            let winAt1 = game.tries === 6 ? 1 : 0;
+            let winAt2 = game.tries === 5 ? 1 : 0;
+            let winAt3 = game.tries === 4 ? 1 : 0;
+            let winAt4 = game.tries === 3 ? 1 : 0;
+            let winAt5 = game.tries === 2 ? 1 : 0;
+            let winAt6 = game.tries === 1 ? 1 : 0;
+            return new PlayerStats(1, winCount, 0, winAt1, winAt2, winAt3, winAt4, winAt5, winAt6)
+        } else if (game.gameState == GameState.LOST) {
+            return new PlayerStats(1, 0, 1);
+        } else {
+            return new PlayerStats(1, 0, 0)
+        }
+    }
+
+    static addToPlayer(game: any, player: any): any {
+        const stats = this.fromGame(game);
+        player.gameCount += stats.gameCount;
+        player.winCount += stats.winCount;
+        player.lossCount += stats.lossCount;
+        player.winAt1 += stats.winAt1;
+        player.winAt2 += stats.winAt2;
+        player.winAt3 += stats.winAt3;
+        player.winAt4 += stats.winAt4;
+        player.winAt5 += stats.winAt5;
+        player.winAt6 += stats.winAt6;
+        return player;
     }
 }

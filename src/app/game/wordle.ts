@@ -9,6 +9,7 @@ import GameError from "../../utils/gameError";
 export default class Wordle implements Game {
     public answer: string;
     public hardMode: boolean;
+    public createdAt: Date;
 
     public tries: number;
     public gameState: GameState = GameState.PLAYING;
@@ -30,6 +31,7 @@ export default class Wordle implements Game {
         }
         this.hardMode = hardMode;
         this.tries = tries;
+        this.createdAt = new Date();
     }
     
     public static fromJson(json: any): Wordle {
@@ -38,6 +40,7 @@ export default class Wordle implements Game {
         game.status = new Status(undefined, json);
         game.loadGuesses(json[`guesses`]);
         game.answer = json[`answer`];
+        game.createdAt = json[`createdAt`]
         return game;
     }
 
@@ -54,6 +57,7 @@ export default class Wordle implements Game {
         game.status.presentLetters = new Set(tally.presentLetters);
         game.status.correctLetters = tally.correctLetters;
         game.answer = tally.answer;
+        game.createdAt = tally.createdAt;
         return game;
     }
 

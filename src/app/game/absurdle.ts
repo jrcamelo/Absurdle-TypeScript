@@ -23,6 +23,7 @@ export default class Absurdle extends Wordle {
         game.gameState = json[`gameState`];
         game.status = new Status(undefined, json);
         game.loadGuesses(json[`guesses`]);
+        game.createdAt = json[`createdAt`];
         return game;
     }
 
@@ -33,6 +34,7 @@ export default class Absurdle extends Wordle {
         game.status.presentLetters = new Set(tally.presentLetters);
         game.status.correctLetters = tally.correctLetters;
         game.loadGuesses(tally.guesses);
+        game.createdAt = tally.createdAt;
         return game;
     }
 

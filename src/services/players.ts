@@ -1,9 +1,10 @@
 import Database from "@/lib/database";
 import Player from "@/models/player";
-import PlayerStats from "@/app/playerStats";
 import { uuid } from "uuidv4";
 import ApiError from '../utils/apiError';
 import { GameMode } from '../app/constants';
+import PlayerStats from '../app/playerStats';
+import GlobalStats from "@/models/globalStats";
 
 export async function getPlayer(userToken: string): Promise<typeof Player | undefined> {
     if (!userToken) return undefined;
@@ -35,7 +36,6 @@ export async function addNewGame(userToken: string, game: any): Promise<typeof P
     if (game.mode == GameMode.DAILY) {
         const today = new Date();
         today.setHours(0, 0, 0, 0);
-        console.log(`${+player.lastDailyGame} == ${+today} = ${+player.lastDailyGame == +today}`)
         if (+player.lastDailyGame == +today) {
             throw new ApiError(`You have already played today's game`, 400);
         }   
@@ -75,20 +75,30 @@ export async function finishGame(userToken: string, game: any): Promise<typeof P
         player.ongoingGame = undefined;
     }
     if (game.mode == GameMode.DAILY) {
-        if (game.gameState === `won`) {
-            player.winCount++;
-            player.winAt1 += game.tries === 6 ? 1 : 0;
-            player.winAt2 += game.tries === 5 ? 1 : 0;
-            player.winAt3 += game.tries === 4 ? 1 : 0;
-            player.winAt4 += game.tries === 3 ? 1 : 0;
-            player.winAt5 += game.tries === 2 ? 1 : 0;
-            player.winAt6 += game.tries === 1 ? 1 : 0;
-        } else {
-            player.lossCount++;
-        }
+        await saveDailyStats(game, player);
     }
     await player.save();
     return player;
+}
+
+async function saveDailyStats(game: any, player: any) {
+    const date = game.createdAt;
+    date.setHours(0, 0, 0, 0);
+    let globalStats = await GlobalStats.findOne({ date });
+    if (!globalStats) {
+        globalStats = await GlobalStats.create({ date })
+    }
+    const stats = PlayerStats.fromGame(game);
+    PlayerStats.addToPlayer(game, player);
+    globalStats.winCount += stats.winCount;
+    globalStats.lossCount += stats.lossCount;
+    globalStats.winAt1 += stats.winAt1;
+    globalStats.winAt2 += stats.winAt2;
+    globalStats.winAt3 += stats.winAt3;
+    globalStats.winAt4 += stats.winAt4;
+    globalStats.winAt5 += stats.winAt5;
+    globalStats.winAt6 += stats.winAt6;
+    await globalStats.save();
 }
 
 export async function quitOngoingGame(userToken: string): Promise<typeof Player> {

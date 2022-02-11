@@ -19,6 +19,7 @@ export default class Daily extends Wordle {
         game.status = new Status(undefined, json);
         game.loadGuesses(json[`guesses`]);
         game.answer = json[`answer`];
+        game.createdAt = json[`createdAt`]
         return game;
     }
 

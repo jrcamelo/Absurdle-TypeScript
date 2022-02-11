@@ -5,6 +5,7 @@ import Status from "../status";
 export default interface Game {
     answer: string;
     hardMode: boolean;
+    createdAt: Date;
 
     tries: number;
     gameState: GameState;

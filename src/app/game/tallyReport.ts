@@ -14,10 +14,12 @@ export default class TallyReport {
     correctLetters: Array<string>;
     answer: string;
     remainingWords = -1;
+    createdAt: Date;
 
     constructor(
         mode: string,
         gameState: string,
+        createdAt: Date,
         tries: number,
         hardMode: boolean,
         guesses: string[][][],
@@ -29,6 +31,7 @@ export default class TallyReport {
     ) {
         this.mode = mode;
         this.gameState = gameState;
+        this.createdAt = createdAt;
         this.tries = tries;
         this.hardMode = hardMode;
         this.guesses = guesses;
@@ -43,6 +46,7 @@ export default class TallyReport {
         return new TallyReport(
             game.getMode(),
             game.gameState,
+            game.createdAt,
             game.tries,
             game.hardMode,
             game.guessesToListOfGuesses(),
@@ -57,6 +61,7 @@ export default class TallyReport {
         return new TallyReport(
             game.getMode(),
             game.gameState,
+            game.createdAt,
             game.tries,
             game.hardMode,
             game.guessesToListOfGuesses(),
@@ -72,6 +77,7 @@ export default class TallyReport {
         return new TallyReport(
             game.getMode(),
             game.gameState,
+            game.createdAt,
             game.tries,
             game.hardMode,
             game.guessesToListOfGuesses(),
@@ -86,6 +92,7 @@ export default class TallyReport {
         return new TallyReport(
             json.mode,
             json.gameState,
+            json.createdAt,
             json.tries,
             json.hardMode,
             json.guesses,
@@ -101,6 +108,7 @@ export default class TallyReport {
         return {
             mode: this.mode,
             gameState: this.gameState,
+            createdAt: this.createdAt,
             tries: this.tries,
             hardMode: this.hardMode,
             guesses: this.guesses,
@@ -116,6 +124,7 @@ export default class TallyReport {
         const map = new Map<string, any>();
         map.set(`mode`, this.mode);
         map.set(`gameState`, this.gameState);
+        map.set(`createdAt`, this.createdAt);
         map.set(`tries`, this.tries);
         map.set(`hardMode`, this.hardMode);
         map.set(`guesses`, this.guesses);
@@ -136,6 +145,7 @@ export default class TallyReport {
         return {
             mode: this.mode,
             gameState: this.gameState,
+            createdAt: this.createdAt,
             tries: this.tries,
             hardMode: this.hardMode,
             guesses: this.guesses,
