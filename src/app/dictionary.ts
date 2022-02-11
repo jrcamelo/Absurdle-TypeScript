@@ -2,13 +2,11 @@ import { PathOrFileDescriptor, readFileSync } from "fs";
 import { shuffle } from "shuffle-seed";
 import * as base32 from "hi-base32";
 import * as Path from "path";
+import getNumberFromDate from "@/utils/dailyNumber";
 
 const DATA_FOLDER = `./data/`;
 const WORDS_FILE = `words.txt`;
 const SECRETS_FILE = `secrets.txt`;
-
-// My birthday :)
-const STARTING_DATE = new Date("2022/02/25");
 
 export default class Dictionary {
     private static _instance: Dictionary;
@@ -38,7 +36,7 @@ export default class Dictionary {
     }
 
     public getDailySecret(date: Date): string {
-        return this.getSecretFromNumber(this.getNumberFromDate(date));
+        return this.getSecretFromNumber(getNumberFromDate(date));
     }
 
     public getCodeForAnswer(answer: string): string {
@@ -101,10 +99,6 @@ export default class Dictionary {
     private getShuffledValidWords(): string[] {
         const words = this.readWordsFile().concat(this.getSecrets());
         return shuffle(words, process.env.VALID_WORDS_SEED);
-    }
-
-    private getNumberFromDate(date: Date): number {
-        return Math.floor((date.getTime() - STARTING_DATE.getTime()) / (1000 * 60 * 60 * 24));
     }
 
     private readSecretsFile(): string[] {

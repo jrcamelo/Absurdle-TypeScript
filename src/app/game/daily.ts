@@ -2,6 +2,7 @@ import { DEFAULT_LIVES, GameMode } from '../constants';
 import Status from '../status';
 import TallyReport from './tallyReport';
 import Wordle from './wordle';
+import getNumberFromDate from '../../utils/dailyNumber';
 
 export default class Daily extends Wordle {
     constructor(tries: number = DEFAULT_LIVES, date?: Date) {
@@ -28,6 +29,6 @@ export default class Daily extends Wordle {
     }
 
     public toUserJson() {
-        return TallyReport.fromDaily(this).toUserJson();
+        return TallyReport.fromDaily(this).toUserJson(getNumberFromDate(this.createdAt)?.toString());
     }
 }
