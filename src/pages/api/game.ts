@@ -5,6 +5,7 @@ import { saveNewPlayerAndGetToken, addNewGame, getOngoingGame } from "@/services
 import modeToNewGame from "@/utils/modeToNewGame";
 import modeToFromJson from "../../utils/modeToFromJson";
 import errorHandler from "@/utils/errorHandler";
+import setToken from "@/utils/cookieSetter";
 
 export default async function handler(req: NextApiGameRequest, res: NextApiResponse) {
     await Database.ensureConnection();
@@ -12,7 +13,7 @@ export default async function handler(req: NextApiGameRequest, res: NextApiRespo
     let userToken = req.cookies?.token;
     if (!userToken) {
         userToken = await saveNewPlayerAndGetToken();
-        res.setHeader(`Set-Cookie`, `token=${userToken}; HttpOnly; Path=/;`);
+        setToken(res, userToken);
     }
     const tally = await getOngoingGame(userToken);
     if (tally) {

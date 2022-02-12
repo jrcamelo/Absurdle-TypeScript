@@ -4,6 +4,7 @@ import { NextApiResponse } from "next";
 import { saveNewPlayerAndGetToken, getPlayerStats } from "@/services/players";
 
 import ApiError from "../../utils/apiError";
+import setToken from "@/utils/cookieSetter";
 
 export default async function handler(req: NextApiGameRequest, res: NextApiResponse) {
     await Database.ensureConnection();
@@ -11,7 +12,7 @@ export default async function handler(req: NextApiGameRequest, res: NextApiRespo
     let userToken = req.cookies?.token;
     if (!userToken) {
         userToken = await saveNewPlayerAndGetToken();
-        res.setHeader(`Set-Cookie`, `token=${userToken}; HttpOnly; Path=/;`);
+        setToken(res, userToken);
     }
     try {
         const stats = await getPlayerStats(userToken);
