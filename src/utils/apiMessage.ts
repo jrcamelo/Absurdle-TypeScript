@@ -8,9 +8,9 @@ export default class ApiMessage {
     toJson(): object {
         return {
             statusCode: 200,
-            body: JSON.stringify({
+            body: {
                 message: this.message,
-            }),
+            },
         };
     }
 

@@ -9,9 +9,9 @@ export default class ApiError extends Error {
     toJson(): object {
         return {
             statusCode: this.statusCode,
-            body: JSON.stringify({
+            body: {
                 error: this.message,
-            }),
+            },
         };
     }
 }
