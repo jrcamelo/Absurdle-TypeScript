@@ -1,3 +1,4 @@
+require('tsconfig-paths/register');
 import Dictionary from "../src/app/dictionary";
 
 describe("Dictionary", () => {

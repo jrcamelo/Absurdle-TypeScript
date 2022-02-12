@@ -1,6 +1,6 @@
+require('tsconfig-paths/register');
 import { LetterState, IHintLetter } from '../src/app/constants';
 import Evaluator from "../src/app/evaluator";
-
 const TESTS_TESTS: IHintLetter[] = [
     { letter: "t", state: LetterState.CORRECT },
     { letter: "e", state: LetterState.CORRECT },

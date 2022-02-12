@@ -1,3 +1,4 @@
+require('tsconfig-paths/register');
 import { LetterState } from "../src/app/constants";
 import Status from "../src/app/status";
 

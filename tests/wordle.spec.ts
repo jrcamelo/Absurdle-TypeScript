@@ -1,3 +1,4 @@
+require('tsconfig-paths/register');
 import Wordle from '../src/app/game/wordle';
 import Dictionary from '../src/app/dictionary';
 import { GameState, DEFAULT_LIVES, GameMode } from '../src/app/constants';
@@ -8,6 +9,7 @@ function makeTally() {
   return new TallyReport(
     GameMode.WORDLE,
     GameState.PLAYING,
+    new Date(),
     DEFAULT_LIVES - 2,
     false,
     [ 
@@ -29,7 +31,8 @@ function makeTally() {
   [ 'f', 'a', 'i', 'l', 'r', 'o' ],
   [ 'e' ],
   [ '', '', '', '', 's' ],
-  'tests'
+  'tests',
+  -1
   )
 }
 
