@@ -1,11 +1,11 @@
 openapi: 3.0.0
 servers:
   - description: camelo.dev
-    url: https://api.wordle.camelo.dev/api/
+    url: https://api.secretle.camelo.dev/api/
 info:
-  description: API for playing Absurdle by Camelo
+  description: API for playing Secretle, a Wordle/Absurdle variation with a focus on no-cheat gameplay.
   version: "1.0.0"
-  title: Absurdle API
+  title: Secretle API
   license:
     name: Apache 2.0
     url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
@@ -135,7 +135,7 @@ paths:
       summary: Gets the stats for the latest daily games
       operationId: stats
       description: |
-        Gets a list of statistics about the latest daily wordle games
+        Gets a list of statistics about the latest daily Wordle games
       parameters: 
         - in: query
           name: day
