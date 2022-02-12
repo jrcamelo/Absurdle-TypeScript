@@ -9,7 +9,7 @@ const VICTORY_GUESSES = [
     "tacky",
     "slash",
     "medal",
-    "pedal"
+    "octal",
 ]
 
 describe("Absurdle", () => {
