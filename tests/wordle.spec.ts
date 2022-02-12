@@ -5,11 +5,11 @@ import { GameState, DEFAULT_LIVES, GameMode } from '../src/app/constants';
 import Evaluator from '../src/app/evaluator';
 import TallyReport from '../src/app/game/tallyReport';
 
-function makeTally() {
+function makeTally(date: Date) {
   return new TallyReport(
     GameMode.WORDLE,
     GameState.PLAYING,
-    new Date(),
+    date,
     DEFAULT_LIVES - 2,
     false,
     [ 
@@ -36,21 +36,21 @@ function makeTally() {
   )
 }
 
-function makeTallyLost() {
-  const tally = makeTally();
+function makeTallyLost(date: Date) {
+  const tally = makeTally(date);
   tally['gameState'] = GameState.LOST;
   tally['tries'] = 0;
   tally['answer'] = "tests";
   return tally;
 }
 
-function makeTallyWon() {
-  const tally = makeTallyLost();
+function makeTallyWon(date: Date) {
+  const tally = makeTallyLost(date);
   tally['gameState'] = GameState.WON;
   tally['tries'] = DEFAULT_LIVES - 2;
   tally['presentLetters'] = [];
   tally['correctLetters'] = [ 't', 'e', 's', 't', 's' ];
-  tally['guesses'] = [ ...makeTallyLost()['guesses'], [
+  tally['guesses'] = [ ...makeTallyLost(date)['guesses'], [
     [ 't', 'correct' ],
     [ 'e', 'correct' ],
     [ 's', 'correct' ],
@@ -187,7 +187,7 @@ describe("Wordle", () => {
     wordle.answer = "tests";
     wordle.tryGuess("fails");
     wordle.tryGuess("error");
-    expect(wordle.toTally()).toEqual(makeTally());
+    expect(wordle.toTally()).toEqual(makeTally(wordle.createdAt));
   });
 
   it("should generate a different tally for victory", () => {
@@ -196,7 +196,7 @@ describe("Wordle", () => {
     wordle.tryGuess("fails");
     wordle.tryGuess("error");
     wordle.tryGuess("tests");
-    expect(wordle.toTally()).toEqual(makeTallyWon());
+    expect(wordle.toTally()).toEqual(makeTallyWon(wordle.createdAt));
   });
 
   it("should generate a different tally for defeat", () => {
@@ -205,14 +205,14 @@ describe("Wordle", () => {
     wordle.tryGuess("fails");
     wordle.tries = 1;
     wordle.tryGuess("error");
-    expect(wordle.toTally()).toEqual(makeTallyLost());
+    expect(wordle.toTally()).toEqual(makeTallyLost(wordle.createdAt));
   });
 
   it("should generate a game from a tally", () => {
-    const wordle = Wordle.fromTally(TallyReport.fromJson(makeTally()));
-    expect(wordle.toTally()).toEqual(makeTally());
+    const wordle = Wordle.fromTally(TallyReport.fromJson(makeTally(new Date())));
+    expect(wordle.toTally()).toEqual(makeTally(wordle.createdAt));
     wordle.answer = "tests";
     wordle.tryGuess("tests");
-    expect(wordle.toTally()).toEqual(makeTallyWon());
+    expect(wordle.toTally()).toEqual(makeTallyWon(wordle.createdAt));
   });
 });
