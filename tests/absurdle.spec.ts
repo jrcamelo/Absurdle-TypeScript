@@ -1,6 +1,7 @@
 require('tsconfig-paths/register');
 import Absurdle from '../src/app/game/absurdle';
 import { GameState, ABSURDLE_LIVES } from '../src/app/constants';
+import Dictionary from '../src/app/dictionary';
 
 const VICTORY_GUESSES = [
     "wrung",
@@ -9,10 +10,14 @@ const VICTORY_GUESSES = [
     "tacky",
     "slash",
     "medal",
-    "octal",
+    "eclat",
 ]
 
 describe("Absurdle", () => {
+    beforeAll(() => {
+        Dictionary.getInstance("TEST_SEED", "TEST_SEED");
+    });
+
     it("should not have a fixed answer", () => {
         const absurdle = new Absurdle();
         expect(absurdle.answer).toBe("-----");

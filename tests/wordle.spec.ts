@@ -61,6 +61,10 @@ function makeTallyWon(date: Date) {
 }
 
 describe("Wordle", () => {
+  beforeAll(() => {
+    Dictionary.getInstance("TEST_SEED", "TEST_SEED");
+  });
+
   it("should start with an answer from the dictionary", () => {
     const wordle = new Wordle();
     const secrets = Dictionary.getInstance().getSecrets();

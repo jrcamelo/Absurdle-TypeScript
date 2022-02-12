@@ -7,21 +7,26 @@ import words from "@/data/words";
 export default class Dictionary {
     private static _instance: Dictionary;
 
+    private dailySeed: string;
+    private validWordsSeed: string;
+
     private _valid_words: string[];
     private _valid_words_map: Map<string, number>;
     private _secrets: string[];
     private _secrets_map: Map<string, number>;
 
-    private constructor() {
+    private constructor(dailySeed?: string, validWordsSeed?: string) {
+        this.dailySeed = dailySeed || process.env.DAILY_SEED!;
+        this.validWordsSeed = validWordsSeed || process.env.VALID_WORDS_SEED!;
         this._secrets = this.getShuffledSecrets();
         this._valid_words = this.getShuffledValidWords();
         this._valid_words_map = this.listToMap(this._valid_words);
         this._secrets_map = this.listToMap(this._secrets);
     }
 
-    public static getInstance(): Dictionary {
+    public static getInstance(dailySeed?: string, validWordsSeed?: string): Dictionary {
         if (!Dictionary._instance) {
-            Dictionary._instance = new Dictionary();
+            Dictionary._instance = new Dictionary(dailySeed, validWordsSeed);
         }
         return Dictionary._instance;
     }
@@ -90,11 +95,11 @@ export default class Dictionary {
     }
 
     private getShuffledSecrets(): string[] {
-        return shuffle([...secrets], process.env.DAILY_SEED);
+        return shuffle([...secrets], this.dailySeed);
     }
 
     private getShuffledValidWords(): string[] {
-        return shuffle([...words, ...secrets], process.env.VALID_WORDS_SEED);
+        return shuffle([...words, ...secrets], this.validWordsSeed);
     }
 
     private listToMap(list: string[]): Map<string, number> {
