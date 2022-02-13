@@ -1,11 +1,12 @@
 {
-  "name": "wordle",
+  "name": "secretle",
   "version": "1.0.0",
-  "description": "Wordle game with Absurdle variation",
+  "description": "API for a Wordle variation with a focus on no-cheating gameplay.",
   "author": "Camelo <jr@camelo.dev> (@jrcamelo)",
   "keywords": [
+    "wordle",
+    "game",
     "nextjs",
-    "starter",
     "typescript"
   ],
   "scripts": {
