@@ -1,5 +1,5 @@
 {
-  "name": "secretle",
+  "name": "secretle-api",
   "version": "1.0.0",
   "description": "API for a Wordle variation with a focus on no-cheating gameplay.",
   "author": "Camelo <jr@camelo.dev> (@jrcamelo)",
