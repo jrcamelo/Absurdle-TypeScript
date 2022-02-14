@@ -1,6 +1,7 @@
 require("tsconfig-paths/register");
 import { LetterState, IHintLetter } from "../src/app/constants";
 import Evaluator from "../src/app/evaluator";
+
 const TESTS_TESTS: IHintLetter[] = [
     { letter: "t", state: LetterState.CORRECT },
     { letter: "e", state: LetterState.CORRECT },
@@ -23,6 +24,46 @@ const WRONG_TESTS: IHintLetter[] = [
     { letter: "o", state: LetterState.ABSENT },
     { letter: "n", state: LetterState.ABSENT },
     { letter: "g", state: LetterState.ABSENT },
+];
+
+const REPEATED_SPEED_ABIDE: IHintLetter[] = [
+    { letter: "s", state: LetterState.ABSENT },
+    { letter: "p", state: LetterState.ABSENT },
+    { letter: "e", state: LetterState.PRESENT },
+    { letter: "e", state: LetterState.ABSENT },
+    { letter: "d", state: LetterState.PRESENT },
+];
+
+const REPEATED_SPEED_ERASE: IHintLetter[] = [
+    { letter: "s", state: LetterState.PRESENT },
+    { letter: "p", state: LetterState.ABSENT },
+    { letter: "e", state: LetterState.PRESENT },
+    { letter: "e", state: LetterState.PRESENT },
+    { letter: "d", state: LetterState.ABSENT },
+];
+
+const REPEATED_SPEED_STEAL: IHintLetter[] = [
+    { letter: "s", state: LetterState.CORRECT },
+    { letter: "p", state: LetterState.ABSENT },
+    { letter: "e", state: LetterState.CORRECT },
+    { letter: "e", state: LetterState.ABSENT },
+    { letter: "d", state: LetterState.ABSENT },
+];
+
+const REPEATED_SPEED_CREPE: IHintLetter[] = [
+    { letter: "s", state: LetterState.ABSENT },
+    { letter: "p", state: LetterState.PRESENT },
+    { letter: "e", state: LetterState.CORRECT },
+    { letter: "e", state: LetterState.PRESENT },
+    { letter: "d", state: LetterState.ABSENT },
+];
+
+const REPEATED_EMEER_SPEED: IHintLetter[] = [
+    { letter: "e", state: LetterState.ABSENT },
+    { letter: "m", state: LetterState.ABSENT },
+    { letter: "e", state: LetterState.CORRECT },
+    { letter: "e", state: LetterState.CORRECT },
+    { letter: "r", state: LetterState.ABSENT },
 ];
 
 describe("Evaluator", () => {
@@ -91,4 +132,20 @@ describe("Evaluator", () => {
         expect(Evaluator.hasCorrectLettersInPosition("error", ["a", "r", "r", "o", "r"])).toBe(false);
     });
 
+    it("should know when a repeated letter is absent (SPEED -> ABIDE/STEAL)", () => {
+        expect(Evaluator.evaluateGuess("abide", "speed")).toEqual(REPEATED_SPEED_ABIDE);
+        expect(Evaluator.evaluateGuess("steal", "speed")).toEqual(REPEATED_SPEED_STEAL);
+    });
+
+    it("should know when two repeated letters are present (SPEED -> ERASE)", () => {
+        expect(Evaluator.evaluateGuess("erase", "speed")).toEqual(REPEATED_SPEED_ERASE);
+    });
+
+    it("should know when a repeated letter is correct and present (SPEED -> CREPE)", () => {
+        expect(Evaluator.evaluateGuess("crepe", "speed")).toEqual(REPEATED_SPEED_CREPE);
+    });
+
+    it("should know when the repeated present letter comes before the correct letters (SPEED -> EMEER)", () => {
+        expect(Evaluator.evaluateGuess("speed", "emeer")).toEqual(REPEATED_EMEER_SPEED);
+    });
 });
