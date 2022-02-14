@@ -4,29 +4,49 @@ import { IHintLetter } from "./constants";
 
 export default class Evaluator {
     static evaluateGuess(answer: string, guess: string): IHintLetter[] {
-        const result: IHintLetter[] = [];
+        let result: IHintLetter[] = [];
+        Evaluator.addEveryLetterAsAbsent(result, guess);
+        Evaluator.addCorrectAndPresentLetters(result, answer);
+        return result;
+    }
+
+    static addEveryLetterAsAbsent(result: IHintLetter[], guess: string): void {
         for (let i = 0; i < 5; i++) {
-            if (guess[i] === answer[i]) {
-                result.push({ letter: guess[i], state: LetterState.CORRECT });
-            } else if (answer.includes(guess[i])) {
-                const presentCount = result.filter((l) => l.state === LetterState.PRESENT).length;
-                const answerCount = answer.split(``).filter((l) => l === guess[i]).length;
-                if (presentCount <= answerCount) {
-                    result.push({
-                        letter: guess[i],
-                        state: LetterState.PRESENT,
-                    });
-                } else {
-                    result.push({
-                        letter: guess[i],
-                        state: LetterState.ABSENT,
-                    });
-                }
-            } else {
-                result.push({ letter: guess[i], state: LetterState.ABSENT });
+            result.push({ letter: guess[i], state: LetterState.ABSENT });
+        }
+    }
+
+    static addCorrectAndPresentLetters(result: IHintLetter[], answer: string): void {
+        const countInAnswer = Evaluator.getLetterCountInWord(answer);
+        // Get correct letters
+        for (let i = 0; i < 5; i++) {
+            const letter = result[i].letter;
+            if (letter === answer[i]) {
+                result[i].state = LetterState.CORRECT;
+                let count = countInAnswer.get(letter)!;
+                countInAnswer.set(letter, count - 1);
             }
         }
-        return result;
+
+        // Get present letters
+        for (let i = 0; i < 5; i++) {
+            if (result[i].state === LetterState.ABSENT) {
+                const letter = result[i].letter;
+                if (countInAnswer.has(letter) && countInAnswer.get(letter)! > 0) {
+                    result[i].state = LetterState.PRESENT;
+                    let count = countInAnswer.get(letter)!;
+                    countInAnswer.set(letter, count - 1);
+                }
+            }
+        }
+    }
+
+    private static getLetterCountInWord(word: string): Map<string, number> {
+        const count = new Map<string, number>();
+        for (const letter of word) {
+            count.set(letter, (count.get(letter) || 0) + 1);
+        }
+        return count;
     }
 
     static isGuessValidWord(guess: string): boolean {
