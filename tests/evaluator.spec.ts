@@ -1,5 +1,5 @@
-require('tsconfig-paths/register');
-import { LetterState, IHintLetter } from '../src/app/constants';
+require("tsconfig-paths/register");
+import { LetterState, IHintLetter } from "../src/app/constants";
 import Evaluator from "../src/app/evaluator";
 const TESTS_TESTS: IHintLetter[] = [
     { letter: "t", state: LetterState.CORRECT },
@@ -67,7 +67,7 @@ describe("Evaluator", () => {
         expect(Evaluator.hasAbsentLetter("tests", new Set(["a", "b", "c", "d"]))).toBe(false);
         expect(Evaluator.hasAbsentLetter("tests", new Set(["a", "b", "c", "d", "e"]))).toBe(true);
     });
-    
+
     it("should know when a guess has a discovered present letter", () => {
         expect(Evaluator.hasPresentLetters("tests", new Set([]))).toBe(true);
         expect(Evaluator.hasPresentLetters("tests", new Set(["t"]))).toBe(true);
@@ -90,4 +90,5 @@ describe("Evaluator", () => {
         expect(Evaluator.hasCorrectLettersInPosition("error", ["", "e", "", "", ""])).toBe(false);
         expect(Evaluator.hasCorrectLettersInPosition("error", ["a", "r", "r", "o", "r"])).toBe(false);
     });
+
 });

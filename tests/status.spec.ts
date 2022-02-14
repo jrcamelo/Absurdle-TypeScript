@@ -1,17 +1,17 @@
-require('tsconfig-paths/register');
+require("tsconfig-paths/register");
 import { LetterState } from "../src/app/constants";
 import Status from "../src/app/status";
 
 const DONE_STATUS = Status.fromArray([
     new Set(["a", "b", "c", "d", "e"]),
     new Set(["f", "g", "h", "i", "j"]),
-    ["j", "k", "l", "m", "n"]
+    ["j", "k", "l", "m", "n"],
 ]);
 
 const WORKING_STATUS = Status.fromArray([
     new Set(["a", "b", "c", "d", "e"]),
     new Set(["f", "g", "h", "i", "j"]),
-    ["", "k", "l", "m", ""]
+    ["", "k", "l", "m", ""],
 ]);
 
 describe("Status", () => {
@@ -26,7 +26,7 @@ describe("Status", () => {
         const status = Status.fromArray([
             new Set(["a", "b", "c", "d", "e"]),
             new Set(["f", "g", "h", "i", "j"]),
-            ["j", "k", "l", "m", "n"]
+            ["j", "k", "l", "m", "n"],
         ]);
         expect(status.absentLetters).toEqual(new Set(["a", "b", "c", "d", "e"]));
         expect(status.presentLetters).toEqual(new Set(["f", "g", "h", "i", "j"]));
@@ -47,7 +47,7 @@ describe("Status", () => {
             { letter: "b", state: LetterState.ABSENT },
             { letter: "c", state: LetterState.PRESENT },
             { letter: "d", state: LetterState.ABSENT },
-            { letter: "e", state: LetterState.CORRECT }
+            { letter: "e", state: LetterState.CORRECT },
         ]);
         expect(status.absentLetters).toEqual(new Set(["b", "d"]));
         expect(status.presentLetters).toEqual(new Set(["c"]));
@@ -61,7 +61,7 @@ describe("Status", () => {
             { letter: "a", state: LetterState.ABSENT },
             { letter: "s", state: LetterState.PRESENT },
             { letter: "d", state: LetterState.ABSENT },
-            { letter: "p", state: LetterState.CORRECT }
+            { letter: "p", state: LetterState.CORRECT },
         ]);
         expect(status.absentLetters).toEqual(new Set(["a", "b", "c", "d", "e"]));
         expect(status.presentLetters).toEqual(new Set(["f", "g", "h", "i", "j", "s"]));
@@ -75,7 +75,7 @@ describe("Status", () => {
             { letter: "b", state: LetterState.PRESENT },
             { letter: "c", state: LetterState.CORRECT },
             { letter: "d", state: LetterState.PRESENT },
-            { letter: "e", state: LetterState.PRESENT }
+            { letter: "e", state: LetterState.PRESENT },
         ]);
         expect(status.presentLetters).toEqual(new Set(["a", "b", "d", "e"]));
         expect(status.correctLetters).toEqual(["", "", "c", "", ""]);
@@ -84,10 +84,9 @@ describe("Status", () => {
             { letter: "d", state: LetterState.CORRECT },
             { letter: "c", state: LetterState.CORRECT },
             { letter: "b", state: LetterState.CORRECT },
-            { letter: "a", state: LetterState.CORRECT }
+            { letter: "a", state: LetterState.CORRECT },
         ]);
         expect(status.presentLetters).toEqual(new Set([]));
         expect(status.correctLetters).toEqual(["e", "d", "c", "b", "a"]);
     });
-    
 });

@@ -1,17 +1,9 @@
-require('tsconfig-paths/register');
-import Absurdle from '../src/app/game/absurdle';
-import { GameState, ABSURDLE_LIVES } from '../src/app/constants';
-import Dictionary from '../src/app/dictionary';
+require("tsconfig-paths/register");
+import Absurdle from "../src/app/game/absurdle";
+import { GameState, ABSURDLE_LIVES } from "../src/app/constants";
+import Dictionary from "../src/app/dictionary";
 
-const VICTORY_GUESSES = [
-    "wrung",
-    "aphid",
-    "fable",
-    "tacky",
-    "slash",
-    "medal",
-    "eclat",
-]
+const VICTORY_GUESSES = ["wrung", "aphid", "fable", "tacky", "slash", "medal", "eclat"];
 
 describe("Absurdle", () => {
     beforeAll(() => {
